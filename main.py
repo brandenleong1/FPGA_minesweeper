@@ -24,11 +24,45 @@ def generateMap():
     global grid
     # We need to implement a random number generator
     # $urandom to generate unsigned random numbers that you expect between 0 to 10 and 0 to 20.
+
+    # Generate the mines
+    mineGrid = []
     for cell_x in range(GRID_NUM[0]):
         row = []
         for cell_y in range(GRID_NUM[1]):
             row.append(random.randint(0,10))
+            row[cell_y] = 0 if row[cell_y] != 0 else 1 # Normalize. Mine is 1 and no mine is 0
+        mineGrid.append(row)
+    
+    # Generate the correct numbers
+    for x in range(len(mineGrid)):
+        row = []
+        for y in range(len(mineGrid[x])):
+            if (mineGrid[x][y]==0):
+                if (x == 0 and y==0):
+                    row.append(mineGrid[x+1][y] + mineGrid[x+1][y+1] + mineGrid[x][y+1])
+                elif (x == GRID_NUM[0]-1 and y == 0):
+                    row.append(mineGrid[x-1][y] + mineGrid[x-1][y+1] + mineGrid[x][y+1])
+                elif (x == GRID_NUM[0]-1 and y == GRID_NUM[1]-1):
+                    row.append(mineGrid[x-1][y] + mineGrid[x-1][y-1] + mineGrid[x][y-1])
+                elif (x == 0 and y == GRID_NUM[1]-1):
+                    row.append(mineGrid[x+1][y] + mineGrid[x+1][y-1] + mineGrid[x][y-1])
+                elif (x == 0 and y != 0 and y != GRID_NUM[1]-1):
+                    row.append(mineGrid[x+1][y] + mineGrid[x+1][y-1] + mineGrid[x+1][y+1] + mineGrid[x][y-1] + mineGrid[x][y+1])
+                elif (x == GRID_NUM[0]-1 and y != 0 and y != GRID_NUM[1]-1):
+                    row.append(mineGrid[x-1][y] + mineGrid[x-1][y-1] + mineGrid[x-1][y+1] + mineGrid[x][y-1] + mineGrid[x][y+1])
+                elif (y == 0 and x != 0 and x != GRID_NUM[0]-1):
+                    row.append(mineGrid[x-1][y] + mineGrid[x+1][y] + mineGrid[x-1][y+1] + mineGrid[x][y+1] + mineGrid[x+1][y+1])
+                elif (y == GRID_NUM[1]-1 and x != 0 and x != GRID_NUM[0]-1):
+                    row.append(mineGrid[x-1][y] + mineGrid[x+1][y] + mineGrid[x-1][y-1] + mineGrid[x][y-1] + mineGrid[x+1][y-1])
+                elif (y != 0 and y != GRID_NUM[1]-1 and x != 0 and x != GRID_NUM[0]-1):
+                    row.append(mineGrid[x-1][y] + mineGrid[x+1][y] + mineGrid[x-1][y-1] + mineGrid[x][y-1] + mineGrid[x+1][y-1] + mineGrid[x-1][y+1] + mineGrid[x][y+1] + mineGrid[x+1][y+1])
+                else:
+                    row.append(-100)
+            else:
+                row.append(-1)
         grid.append(row)
+                
 
 def drawCell(x:int, y:int):
     global grid, tileSz, screen
@@ -82,11 +116,8 @@ def moveCursor(x=0, y=0):
     # print(pos[0],pos[1])
     # print(grid[pos[0]+x][pos[1]+y])
 
+    # Regenerates the previous cell
     drawCell(pos[0]+x, pos[1]+y)
-    # if (grid[pos[0]+x][pos[1]+y] != -1):
-    #     drawCell(pos[0]+x, pos[1]+y)
-    # else:
-    #     pygame.draw.rect(screen, (1,1,1), old_rect)
 
 if __name__ == "__main__":
     global screen, clock, running, grid, tileSz
