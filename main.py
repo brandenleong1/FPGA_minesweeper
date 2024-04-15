@@ -32,6 +32,10 @@ def generateMap():
 
 def drawCell(x:int, y:int):
     global grid, tileSz, screen
+
+    rect = pygame.Rect(x*tileSz, y*tileSz, tileSz, tileSz)
+    pygame.draw.rect(screen, TILE_COLOR if grid[x][y] != -1 else (1,1,1), rect)
+    pygame.display.update()
     font = pygame.font.Font('freesansbold.ttf', 15)
     text = font.render(str(grid[x][y]), True, TEXT_COLOR, TILE_COLOR)
     textRect = text.get_rect()
@@ -42,7 +46,6 @@ def drawGrid():
     for x in range(0, GRID_NUM[0]):
         for y in range(0, GRID_NUM[1]):
             drawCell(x, y)
-
 
 def getUserInput():
     global running, pos, open_grid, state
@@ -64,21 +67,26 @@ def getUserInput():
         
     
 def moveCursor(x=0, y=0):
+    # put a purple cell where your cursor is and regenerate the previous cell the cursor was on
+     
     global pos
-    x *= -1
+    x *= -1 # Correcting
     pos[0] -= x
     pos[1] -= y
-    old_rect = pygame.Rect((pos[0]+x)*tileSz, (pos[1]+y)*tileSz, tileSz, tileSz)
+
+    # Make the cell it is going to purple
     new_rect = pygame.Rect(pos[0]*tileSz, pos[1]*tileSz, tileSz, tileSz)
     pygame.draw.rect(screen, (145,13,100), new_rect)
-    print(grid[pos[0]][pos[1]])
-    print(pos[0],pos[1])
-    print(grid[pos[0]+x][pos[1]+y])
-    if (grid[pos[0]+x][pos[1]+y] != -1):
-        pygame.draw.rect(screen, TILE_COLOR, old_rect)
-    else:
-        pygame.draw.rect(screen, (1,1,1), old_rect)
-        
+
+    # print(grid[pos[0]][pos[1]])
+    # print(pos[0],pos[1])
+    # print(grid[pos[0]+x][pos[1]+y])
+
+    drawCell(pos[0]+x, pos[1]+y)
+    # if (grid[pos[0]+x][pos[1]+y] != -1):
+    #     drawCell(pos[0]+x, pos[1]+y)
+    # else:
+    #     pygame.draw.rect(screen, (1,1,1), old_rect)
 
 if __name__ == "__main__":
     global screen, clock, running, grid, tileSz
@@ -88,7 +96,7 @@ if __name__ == "__main__":
     state = STATES[0]
     running = True
     open_grid = False
-    pos = [0,0]
+    pos = [int(GRID_NUM[0]/2-1),int(GRID_NUM[1]/2-1)]
     grid = []
     tileSz = 20
 
@@ -108,7 +116,7 @@ if __name__ == "__main__":
             drawGrid()
             
             # Update the display using flip 
-            pygame.display.flip()
+            pygame.display.update()
             state = "IDLE"
 
         elif state == "RUNNING_FLAG_CELL":
