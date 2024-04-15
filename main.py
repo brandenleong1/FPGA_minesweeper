@@ -64,17 +64,21 @@ def generateMap():
         grid.append(row)
                 
 
-def drawCell(x:int, y:int):
+def drawCell(x:int, y:int, open:bool=False):
     global grid, tileSz, screen
 
     rect = pygame.Rect(x*tileSz, y*tileSz, tileSz, tileSz)
-    pygame.draw.rect(screen, TILE_COLOR if grid[x][y] != -1 else (1,1,1), rect)
-    pygame.display.update()
-    font = pygame.font.Font('freesansbold.ttf', 15)
-    text = font.render(str(grid[x][y]), True, TEXT_COLOR, TILE_COLOR)
-    textRect = text.get_rect()
-    textRect.center = ((x*tileSz)+tileSz / 2,  (y*tileSz)+tileSz / 2)
-    screen.blit(text, textRect)
+    if open:
+        pygame.draw.rect(screen, TILE_COLOR if grid[x][y] != -1 else (100,1,1), rect)
+        pygame.display.update()
+        font = pygame.font.Font('freesansbold.ttf', 15)
+        text = font.render(str(grid[x][y]), True, TEXT_COLOR, TILE_COLOR)
+        textRect = text.get_rect()
+        textRect.center = ((x*tileSz)+tileSz / 2,  (y*tileSz)+tileSz / 2)
+        screen.blit(text, textRect)
+    else:
+        pygame.draw.rect(screen, TILE_COLOR, rect)
+        pygame.display.update()
 
 def drawGrid():
     for x in range(0, GRID_NUM[0]):
@@ -103,7 +107,7 @@ def getUserInput():
 def moveCursor(x=0, y=0):
     # put a purple cell where your cursor is and regenerate the previous cell the cursor was on
      
-    global pos
+    global pos, open_grid
     x *= -1 # Correcting
     pos[0] -= x
     pos[1] -= y
@@ -117,7 +121,9 @@ def moveCursor(x=0, y=0):
     # print(grid[pos[0]+x][pos[1]+y])
 
     # Regenerates the previous cell
-    drawCell(pos[0]+x, pos[1]+y)
+    if (not open_grid):
+        drawCell(pos[0]+x, pos[1]+y)
+    open_grid=False
 
 if __name__ == "__main__":
     global screen, clock, running, grid, tileSz
@@ -154,17 +160,17 @@ if __name__ == "__main__":
             grid[pos[0]][pos[1]] = -2
         
         elif state=="OPEN_GRID":
-            grid[pos[0]][pos[1]] = -1
             rect = pygame.Rect(pos[0]*tileSz, pos[1]*tileSz, tileSz, tileSz)
             # print(grid)
-            if (grid[pos[0]][pos[1]]):
-                pygame.draw.rect(screen, (1,1,1), rect)
+            if (grid[pos[0]][pos[1]] == -1):
+                # Game over
+                pygame.draw.rect(screen, (255,1,1), rect)
             else:
-                pygame.draw.rect(screen, (255,255,255), rect)
+                drawCell(pos[0], pos[1], open=True)
             # screen.fill(BG_COLOR) 
             pygame.display.update()
             state = "IDLE"
-            open_grid = False
+            open_grid = True
 
         elif (state == "IDLE"):
             getUserInput()
