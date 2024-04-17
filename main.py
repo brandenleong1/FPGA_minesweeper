@@ -8,12 +8,13 @@ from math import floor
 BG_COLOR = (50, 50, 50)
 TILE_COLOR = (100, 100, 100)
 FLAG_COLOR = (255, 100, 100)
-TEXT_COLOR = (255,255,255)
+TEXT_COLOR = (253,253,253)
+TEXT_BOX_COLOR = (169, 169, 169)
 WIDTH = 800
 HEIGHT = 400
 GRID_NUM = (40, 20) # row and columns
 GAME_NAME = "MineSweeper"
-STATES = ["INIT", "START", "IDLE", "TOGGLE_FLAG", "OPEN_GRID"]
+STATES = ["INIT", "START", "GEN_MAP", "IDLE", "TOGGLE_FLAG", "OPEN_GRID", "GAMEOVER"]
 
 def top():
 
@@ -58,9 +59,9 @@ def generateMap():
                 elif (y != 0 and y != GRID_NUM[1]-1 and x != 0 and x != GRID_NUM[0]-1):
                     row.append(mineGrid[x-1][y] + mineGrid[x+1][y] + mineGrid[x-1][y-1] + mineGrid[x][y-1] + mineGrid[x+1][y-1] + mineGrid[x-1][y+1] + mineGrid[x][y+1] + mineGrid[x+1][y+1])
                 else:
-                    row.append(-100)
+                    row.append(-100) # For debugging purposes
             else:
-                row.append(-1)
+                row.append(-1) # If it's a mine
         grid.append(row)
                 
 
@@ -68,7 +69,7 @@ def drawCell(x:int, y:int):
     global grid, tileSz, screen
 
     rect = pygame.Rect(x*tileSz, y*tileSz, tileSz, tileSz)
-    if grid[x][y] > 9 and grid[x][y] < 20:
+    if grid[x][y] > 9 and grid[x][y] < 20: # If it's open
         pygame.draw.rect(screen, TILE_COLOR if grid[x][y] != -1 else (100,1,1), rect)
         pygame.display.update()
         font = pygame.font.Font('freesansbold.ttf', 15)
@@ -76,11 +77,11 @@ def drawCell(x:int, y:int):
         textRect = text.get_rect()
         textRect.center = ((x*tileSz)+tileSz / 2,  (y*tileSz)+tileSz / 2)
         screen.blit(text, textRect)
-    elif grid[x][y] >= 20:
+    elif grid[x][y] >= 20: # If there's a flag
         pygame.draw.rect(screen, FLAG_COLOR, rect)
         pygame.display.update()
 
-    else:
+    else: # If it's still a untouched cell
         pygame.draw.rect(screen, TILE_COLOR, rect)
         pygame.display.update()
 
@@ -90,24 +91,28 @@ def drawGrid():
             drawCell(x, y)
 
 def getUserInput():
-    global running, pos, state
+    global running, pos, state, started
     pressed = pygame.key.get_pressed()
     for event in pygame.event.get(): 
         # Check for QUIT event	 
-        if event.type == pygame.QUIT: 
-            running = False
-        if pressed[K_UP]:
-            state = "MOVE_UP"
-        elif pressed[K_DOWN]:
-            state = "MOVE_DOWN"
-        elif pressed[K_LEFT]:
-            state = "MOVE_LEFT"
-        elif pressed[K_RIGHT]:
-            state = "MOVE_RIGHT"
-        elif pressed[K_SPACE]:
-            state = "OPEN_GRID"
-        elif pressed[K_f]:
-            state = "TOGGLE_FLAG"
+        if started == 1:
+            if event.type == pygame.QUIT: 
+                running = False
+            if pressed[K_UP]:
+                state = "MOVE_UP"
+            elif pressed[K_DOWN]:
+                state = "MOVE_DOWN"
+            elif pressed[K_LEFT]:
+                state = "MOVE_LEFT"
+            elif pressed[K_RIGHT]:
+                state = "MOVE_RIGHT"
+            elif pressed[K_SPACE]:
+                state = "OPEN_GRID"
+            elif pressed[K_f]:
+                state = "TOGGLE_FLAG"
+        else:
+            if pressed[K_f]:
+                state = STATES[2]
         
     
 def moveCursor(x=0, y=0):
@@ -139,6 +144,7 @@ if __name__ == "__main__":
     pos = [int(GRID_NUM[0]/2-1),int(GRID_NUM[1]/2-1)]
     grid = []
     tileSz = 20
+    started = 0
 
 
     # Main Program variables
@@ -152,12 +158,29 @@ if __name__ == "__main__":
             pygame.display.set_caption(GAME_NAME)
             # Fill the background colour to the screen 
             screen.fill(BG_COLOR) 
+            # Update the display using flip 
+            pygame.display.flip()
+            state = STATES[1]
+            print("Inited pygame")
+        
+        elif (state == STATES[1]):
+            largeFont = pygame.font.SysFont('Grand9K Pixel',50)
+            mainFont = pygame.font.SysFont('Grand9K Pixel',35)
+
+            mainscreenText = largeFont.render("Minesweeper", True, TEXT_COLOR, TILE_COLOR)
+            mainscreenRect = mainscreenText.get_rect()
+            mainscreenRect.center = ((800/2, 400/2))
+            screen.blit(mainscreenText , mainscreenRect)
+            pygame.display.update()
+            print("Main screen")
+            state = "IDLE"
+        
+        elif (state == STATES[2]):
             generateMap()
             drawGrid()
-            
-            # Update the display using flip 
-            pygame.display.update()
-            state = "IDLE"
+            pygame.display.flip()
+            started = 1
+            state = STATES[3]
 
         elif state == "TOGGLE_FLAG":
             if (grid[pos[0]][pos[1]] >= 19):
@@ -175,9 +198,9 @@ if __name__ == "__main__":
             # print(grid)
             if (grid[pos[0]][pos[1]] == -1):
                 # Game over
-                cellsShown += 1
                 pygame.draw.rect(screen, (255,1,1), rect)
-            elif (grid[pos[0]][pos[1]] < 9):
+                state = "GAMEOVER"
+            elif (grid[pos[0]][pos[1]] < 9): # Not flagged and already opened
                 pq = [(pos[0], pos[1])]
                 while pq != []:
                     # Open valid cell
@@ -207,15 +230,29 @@ if __name__ == "__main__":
                         else:
                             break
                     pq.pop(0)
+                state = "IDLE"
             else:
-                grid[pos[0]][pos[1]] += 10
-                drawCell(pos[0], pos[1])
+                print("error!")
+                state = "IDLE"
+
             # screen.fill(BG_COLOR) 
             pygame.display.update()
-            state = "IDLE"
 
         elif (state == "IDLE"):
+            print("Idling")
             getUserInput()
+        
+        elif (state == "GAMEOVER"):
+            largeFont = pygame.font.SysFont('Grand9K Pixel',50)
+            mainFont = pygame.font.SysFont('Grand9K Pixel',35)
+
+            mainscreenText = largeFont.render("GAMEOVER", True, TEXT_COLOR, TILE_COLOR)
+            mainscreenRect = mainscreenText.get_rect()
+            mainscreenRect.center = ((800/2, 400/2))
+            screen.blit(mainscreenText , mainscreenRect)
+            pygame.display.update()
+            print("Main screen")
+            state = "IDLE"
         
         elif (state == "MOVE_UP"):
             moveCursor(0, 1)
@@ -237,8 +274,6 @@ if __name__ == "__main__":
             pygame.display.update()
             state = "IDLE"
 
-
-            
 
     print("Minesweeper finished!")
 
