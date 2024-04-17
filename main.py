@@ -13,7 +13,7 @@ WIDTH = 800
 HEIGHT = 400
 GRID_NUM = (40, 20) # row and columns
 GAME_NAME = "MineSweeper"
-STATES = ["INIT", "START", "IDLE", "OPEN_GRID"]
+STATES = ["INIT", "START", "IDLE", "TOGGLE_FLAG", "OPEN_GRID"]
 
 def top():
 
@@ -30,7 +30,7 @@ def generateMap():
     for cell_x in range(GRID_NUM[0]):
         row = []
         for cell_y in range(GRID_NUM[1]):
-            row.append(random.randint(0,10))
+            row.append(random.randint(0,5))
             row[cell_y] = 0 if row[cell_y] != 0 else 1 # Normalize. Mine is 1 and no mine is 0
         mineGrid.append(row)
     
@@ -64,18 +64,22 @@ def generateMap():
         grid.append(row)
                 
 
-def drawCell(x:int, y:int, open:bool=False):
+def drawCell(x:int, y:int):
     global grid, tileSz, screen
 
     rect = pygame.Rect(x*tileSz, y*tileSz, tileSz, tileSz)
-    if open:
+    if grid[x][y] > 9 and grid[x][y] < 20:
         pygame.draw.rect(screen, TILE_COLOR if grid[x][y] != -1 else (100,1,1), rect)
         pygame.display.update()
         font = pygame.font.Font('freesansbold.ttf', 15)
-        text = font.render(str(grid[x][y]), True, TEXT_COLOR, TILE_COLOR)
+        text = font.render(str(grid[x][y]%10), True, TEXT_COLOR, TILE_COLOR)
         textRect = text.get_rect()
         textRect.center = ((x*tileSz)+tileSz / 2,  (y*tileSz)+tileSz / 2)
         screen.blit(text, textRect)
+    elif grid[x][y] >= 20:
+        pygame.draw.rect(screen, FLAG_COLOR, rect)
+        pygame.display.update()
+
     else:
         pygame.draw.rect(screen, TILE_COLOR, rect)
         pygame.display.update()
@@ -86,7 +90,7 @@ def drawGrid():
             drawCell(x, y)
 
 def getUserInput():
-    global running, pos, open_grid, state
+    global running, pos, state
     pressed = pygame.key.get_pressed()
     for event in pygame.event.get(): 
         # Check for QUIT event	 
@@ -102,12 +106,14 @@ def getUserInput():
             state = "MOVE_RIGHT"
         elif pressed[K_SPACE]:
             state = "OPEN_GRID"
+        elif pressed[K_f]:
+            state = "TOGGLE_FLAG"
         
     
 def moveCursor(x=0, y=0):
     # put a purple cell where your cursor is and regenerate the previous cell the cursor was on
      
-    global pos, open_grid
+    global pos
     x *= -1 # Correcting
     pos[0] -= x
     pos[1] -= y
@@ -121,9 +127,7 @@ def moveCursor(x=0, y=0):
     # print(grid[pos[0]+x][pos[1]+y])
 
     # Regenerates the previous cell
-    if (not open_grid):
-        drawCell(pos[0]+x, pos[1]+y)
-    open_grid=False
+    drawCell(pos[0]+x, pos[1]+y)
 
 if __name__ == "__main__":
     global screen, clock, running, grid, tileSz
@@ -132,7 +136,6 @@ if __name__ == "__main__":
     #-----------------------------------------------------
     state = STATES[0]
     running = True
-    open_grid = False
     pos = [int(GRID_NUM[0]/2-1),int(GRID_NUM[1]/2-1)]
     grid = []
     tileSz = 20
@@ -156,21 +159,60 @@ if __name__ == "__main__":
             pygame.display.update()
             state = "IDLE"
 
-        elif state == "RUNNING_FLAG_CELL":
-            grid[pos[0]][pos[1]] = -2
+        elif state == "TOGGLE_FLAG":
+            if (grid[pos[0]][pos[1]] >= 19):
+                grid[pos[0]][pos[1]] -= 20
+            elif (grid[pos[0]][pos[1]] < 9):
+                grid[pos[0]][pos[1]] += 20
+            drawCell(pos[0], pos[1])
+            pygame.display.update()
+            state = "IDLE"
         
         elif state=="OPEN_GRID":
+            cells2show = random.randrange(1, 10)
+            cellsShown = 0
             rect = pygame.Rect(pos[0]*tileSz, pos[1]*tileSz, tileSz, tileSz)
             # print(grid)
             if (grid[pos[0]][pos[1]] == -1):
                 # Game over
+                cellsShown += 1
                 pygame.draw.rect(screen, (255,1,1), rect)
+            elif (grid[pos[0]][pos[1]] < 9):
+                pq = [(pos[0], pos[1])]
+                while pq != []:
+                    # Open valid cell
+                    try:
+                        # print(f"Opening pos is {pq[0][0]} by {pq[0][1]}")
+                        if grid[pq[0][0]][pq[0][1]] < 9 and grid[pq[0][0]][pq[0][1]] != -1:
+                            grid[pq[0][0]][pq[0][1]] += 10
+                    except Exception as e:
+                        print(f"Got exception {e}")
+                        print(f"pos is {pq[0][0]} by {pq[0][1]}")
+
+                    # Add surrounding cells to grid:
+                    for i in range(-1, 2):
+                        for j in range (-1, 2):
+                            try:
+                                if cellsShown == cells2show:
+                                    break
+                                if (min(pq[0][0]+i, pq[0][1]+j) >= 0 and pq[0][0]+i < GRID_NUM[0] and pq[0][1]+j < GRID_NUM[1] and \
+                                    grid[pq[0][0]+i][pq[0][1]+j] < 9 and grid[pq[0][0]+i][pq[0][1]+j] != -1 ):
+                                    cellsShown += 1
+                                    pq.append((pq[0][0]+i, pq[0][1]+j))
+                                    grid[pq[0][0]+i][pq[0][1]+j] += 10
+                                    drawCell(pq[0][0]+i, pq[0][1]+j)
+                            except Exception as e:
+                                print(f"Got exception {e}")
+                                print(f"pos is {pq[0][0]+i} by {pq[0][1]+j}")
+                        else:
+                            break
+                    pq.pop(0)
             else:
-                drawCell(pos[0], pos[1], open=True)
+                grid[pos[0]][pos[1]] += 10
+                drawCell(pos[0], pos[1])
             # screen.fill(BG_COLOR) 
             pygame.display.update()
             state = "IDLE"
-            open_grid = True
 
         elif (state == "IDLE"):
             getUserInput()
