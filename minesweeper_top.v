@@ -57,15 +57,15 @@ module minesweeper_top (
 	/* == ASSIGNMENTS == */
 		assign {QuadSpiFlashCS} = 1'b1;
 		assign reset = BtnC_Pulse && Sw0;
-		assign inc_rand = BtnC_Pulse && Sw2;
+		assign inc_rand = BtnC_Pulse && Sw2 && ~Sw0;
 
 		assign btns = {BtnL_Pulse, BtnU_Pulse, BtnD_Pulse, BtnR_Pulse, BtnC_Pulse};
 
 		// assign y_coord = {Sw15, Sw14, Sw13, Sw12};
 		// assign x_coord = {Sw11, Sw10, Sw9, Sw8};
 
-		assign flag = BtnC_Pulse && Sw1 && ~Sw0;
-		assign open = BtnC_Pulse && ~Sw1 && ~Sw0;
+		assign flag = BtnC_Pulse && Sw1 && ~Sw2 && ~Sw0;
+		assign open = BtnC_Pulse && ~Sw1 && ~Sw2 && ~Sw0;
 
 	/* == CLOCK DIVISION == */
 		BUFGP BUFGP1(board_clk, ClkPort);
