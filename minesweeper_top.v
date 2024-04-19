@@ -49,14 +49,15 @@ module minesweeper_top (
 		wire [1:0] cell_val_cover;
 		wire [(x_coord_bits + y_coord_bits - 1):0] num_mines;
 		wire [31:0] rand, seed;
+		wire inc_rand;
 		wire flag, open;
 
-		wire is_init;
 		reg test;
 
 	/* == ASSIGNMENTS == */
 		assign {QuadSpiFlashCS} = 1'b1;
-		assign reset = BtnC && Sw0;
+		assign reset = BtnC_Pulse && Sw0;
+		assign inc_rand = BtnC_Pulse && Sw2;
 
 		assign btns = {BtnL_Pulse, BtnU_Pulse, BtnD_Pulse, BtnR_Pulse, BtnC_Pulse};
 
@@ -161,17 +162,17 @@ module minesweeper_top (
 	/* == DESIGN == */
 		board board_arr(
 			.clk(sys_clk), .reset(reset),
-			.btnC_Pulse(BtnC_Pulse),
+			.btnC_Pulse(inc_rand),
 			.x_coord(x_coord), .y_coord(y_coord),
 			.cell_val(cell_val_board), .num_mines(num_mines),
-			.seed(seed), .rand(rand), .is_init(is_init)
+			.seed(seed), .rand(rand)
 		);
 
 		board_cover board_cover_arr(
 			.clk(sys_clk), .reset(reset),
 			.flag(flag), .open(open),
 			.x_coord(x_coord), .y_coord(y_coord),
-			.cell_val(cell_val_cover), .is_init()
+			.cell_val(cell_val_cover)
 		);
 
 	/* == OUTPUT: LEDs == */
@@ -179,14 +180,14 @@ module minesweeper_top (
 		assign {Ld3, Ld2, Ld1, Ld0} = {BtnL, BtnU, BtnR, BtnD};
 
 	/* == OUTPUT: SSDs == */
-		assign SSD7 = y_coord[3:0];
-		assign SSD6 = x_coord[3:0];
-		assign SSD5 = {3'b000, cell_val_board[4]};
-		assign SSD4 = cell_val_board[3:0];
-		assign SSD3 = rand[7:4];
-		assign SSD2 = rand[3:0];
-		assign SSD1 = num_mines[7:4];
-		assign SSD0 = num_mines[3:0];
+		assign SSD7 = Sw15 ? seed[7:4] :		y_coord[3:0];
+		assign SSD6 = Sw15 ? seed[3:0] :		x_coord[3:0];
+		assign SSD5 = Sw15 ? rand[7:4] :		{3'b000, cell_val_board[4]};
+		assign SSD4 = Sw15 ? rand[3:0] :		cell_val_board[3:0];
+		assign SSD3 = Sw15 ? 4'b0000 :			4'b0000;
+		assign SSD2 = Sw15 ? 4'b0000 :			{2'b00, cell_val_cover[1:0]};
+		assign SSD1 = Sw15 ? num_mines[7:4] :	4'b0000;
+		assign SSD0 = Sw15 ? num_mines[3:0] :	4'b0000;
 
 		assign ssdscan_clk = DIV_CLK[19:17];
 		assign An0 = !(~(ssdscan_clk[2]) && ~(ssdscan_clk[1]) && ~(ssdscan_clk[0]));

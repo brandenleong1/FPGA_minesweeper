@@ -2,7 +2,7 @@ module board_cover(
 	clk, reset,
 	flag, open,
 	x_coord, y_coord,
-	cell_val, is_init
+	cell_val
 );
 
 	parameter x_size = 16, y_size = 16;
@@ -16,7 +16,7 @@ module board_cover(
 
 	reg [1:0] board_arr [0:(y_size - 1)][0:(x_size - 1)];
 
-	output reg is_init = 1'b0;
+	reg is_init = 1'b0;
 	reg [(x_coord_bits - 1):0] init_x;
 	reg [(y_coord_bits - 1):0] init_y;
 

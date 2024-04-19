@@ -20,10 +20,11 @@ module minesweeper_tb;
 	/* == LOCAL SIGNALS == */
 		reg [(x_coord_bits - 1):0] x_coord;
 		reg [(y_coord_bits - 1):0] y_coord;
+		reg flag, open;
 		wire [4:0] cell_val;
+		wire [1:0] cell_val_cover;
 		wire [(x_coord_bits + y_coord_bits - 1):0] num_mines;
 		wire [31:0] rand;
-		wire is_init;
 
 	/* == INITIALIZE == */
 		task print_board;
@@ -46,6 +47,8 @@ module minesweeper_tb;
 			btnL = 0;
 			x_coord = 0;
 			y_coord = 0;
+			flag = 0;
+			open = 0;
 
 			#20;
 			Reset = 0;
@@ -78,7 +81,14 @@ module minesweeper_tb;
 		board board_arr(
 			.clk(Clk), .reset(Reset),
 			.x_coord(x_coord), .y_coord(y_coord),
-			.cell_val(cell_val), .num_mines(num_mines), .rand(rand), .is_init(is_init)
+			.cell_val(cell_val), .num_mines(num_mines), .rand(rand)
+		);
+
+		board_cover board_cover_arr(
+			.clk(Clk), .reset(Reset),
+			.flag(flag), .open(open),
+			.x_coord(x_coord), .y_coord(y_coord),
+			.cell_val(cell_val_cover)
 		);
 
 endmodule
