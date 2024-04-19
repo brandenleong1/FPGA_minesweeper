@@ -78,7 +78,7 @@ module minesweeper_tb;
 		board board_arr(
 			.clk(Clk), .reset(Reset),
 			.x_coord(x_coord), .y_coord(y_coord),
-			.cell_val(cell_val), .rand(rand), .is_init(is_init)
+			.cell_val(cell_val), .num_mines(num_mines), .rand(rand), .is_init(is_init)
 		);
 
 endmodule

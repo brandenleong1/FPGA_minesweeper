@@ -112,7 +112,7 @@ module minesweeper_top (
 			test = 1'b0;
 		end
 
-		always @ (sys_clk) begin
+		always @ (posedge sys_clk) begin
 			if (reset) begin
 
 				x_coord = 0;
@@ -128,30 +128,30 @@ module minesweeper_top (
 				case (btns)
 					5'b10000: begin // LEFT
 						x_coord = x_coord - 1;
-						// if (x_coord >= x_size) begin
-						// 	x_coord = x_size - 1;
-						// end
+						if (x_coord >= x_size) begin
+							x_coord = x_size - 1;
+						end
 					end
 
 					5'b01000: begin // UP
 						y_coord = y_coord - 1;
-						// if (y_coord >= y_size) begin
-						// 	y_coord = y_size - 1;
-						// end
+						if (y_coord >= y_size) begin
+							y_coord = y_size - 1;
+						end
 					end
 
 					5'b00100: begin // DOWN
 						y_coord = y_coord + 1;
-						// if (y_coord >= y_size) begin
-						// 	y_coord = y_size - 1;
-						// end
+						if (y_coord >= y_size) begin
+							y_coord = y_size - 1;
+						end
 					end
 
 					5'b00010: begin // RIGHT
 						x_coord = x_coord + 1;
-						// if (x_coord >= x_size) begin
-						// 	x_coord = x_size - 1;
-						// end
+						if (x_coord >= x_size) begin
+							x_coord = x_size - 1;
+						end
 					end
 				endcase
 
@@ -175,7 +175,7 @@ module minesweeper_top (
 		);
 
 	/* == OUTPUT: LEDs == */
-		assign {Ld7, Ld6, Ld5, Ld4} = {1, reset, test, BtnC};
+		assign {Ld7, Ld6, Ld5, Ld4} = {flag, open, reset, BtnC};
 		assign {Ld3, Ld2, Ld1, Ld0} = {BtnL, BtnU, BtnR, BtnD};
 
 	/* == OUTPUT: SSDs == */
@@ -185,8 +185,8 @@ module minesweeper_top (
 		assign SSD4 = cell_val_board[3:0];
 		assign SSD3 = rand[7:4];
 		assign SSD2 = rand[3:0];
-		assign SSD1 = seed[7:4];
-		assign SSD0 = seed[3:0];
+		assign SSD1 = num_mines[7:4];
+		assign SSD0 = num_mines[3:0];
 
 		assign ssdscan_clk = DIV_CLK[19:17];
 		assign An0 = !(~(ssdscan_clk[2]) && ~(ssdscan_clk[1]) && ~(ssdscan_clk[0]));
