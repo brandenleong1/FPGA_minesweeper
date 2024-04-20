@@ -1,8 +1,9 @@
 module board(
 	clk, reset,
-	btnC_Pulse,
+	init_pulse,
 	x_coord, y_coord,
-	cell_val, num_mines, seed, rand
+	cell_val, num_mines, seed, rand,
+	is_init, init_x, init_y
 );
 
 	parameter x_size = 16, y_size = 16;
@@ -10,7 +11,7 @@ module board(
 	parameter cutoff = 32'h2AAAAAAA;
 
 	input clk, reset;
-	input btnC_Pulse;
+	input init_pulse;
 	input [(x_coord_bits - 1):0] x_coord;
 	input [(y_coord_bits - 1):0] y_coord;
 	output reg [4:0] cell_val;
@@ -19,9 +20,9 @@ module board(
 	reg [4:0] board_arr [0:(y_size - 1)][0:(x_size - 1)];
 
 	output reg [31:0] seed;
-	reg [1:0] is_init;
-	reg [(x_coord_bits - 1):0] init_x;
-	reg [(y_coord_bits - 1):0] init_y;
+	output reg [1:0] is_init;
+	output reg [(x_coord_bits - 1):0] init_x;
+	output reg [(y_coord_bits - 1):0] init_y;
 	output wire [31:0] rand;
 
 	wire [(x_coord_bits - 1):0] init_x_L, init_x_R;
@@ -36,26 +37,21 @@ module board(
 
 	initial begin
 		seed = 32'h12345678;
-		is_init = 0;
+		is_init = 2'b00;
 	end
 
 	always @ (posedge clk, posedge reset) begin
 		if (reset) begin
-			is_init = 1;
+			// seed = 32'h12345678;
+			is_init = 2'b01;
 			init_x = 0;
 			init_y = 0;
 			num_mines = 0;
 		end else begin
-			if (btnC_Pulse) begin
-				seed = rand;
-			end
+			// if (init_pulse) begin
+				// seed = rand;
 
-			case (is_init)
-				0: begin
-
-				end
-
-				1: begin
+				if (is_init == 2'b01) begin
 					if (rand <= cutoff) begin
 						board_arr[init_y][init_x] <= -1;
 						num_mines <= num_mines + 1;
@@ -68,7 +64,7 @@ module board(
 					if (init_x == (x_size - 1)) begin
 						init_x <= 0;
 						if (init_y == (y_size - 1)) begin
-							is_init <= 2;
+							is_init <= 2'b10;
 							init_y <= 0;
 						end else begin
 							init_y <= init_y + 1;
@@ -76,9 +72,7 @@ module board(
 					end else begin
 						init_x <= init_x + 1;
 					end
-				end
-
-				2: begin
+				end else if (is_init == 2'b10) begin
 					if (board_arr[init_y][init_x][4] == 1) begin
 
 						if ((init_y > 0) && (board_arr[init_y_U][init_x][4] != 1)) begin // U
@@ -118,7 +112,7 @@ module board(
 					if (init_x == (x_size - 1)) begin
 						init_x <= 0;
 						if (init_y == (y_size - 1)) begin
-							is_init <= 0;
+							is_init <= 2'b00;
 							init_y <= 0;
 						end else begin
 							init_y <= init_y + 1;
@@ -127,7 +121,7 @@ module board(
 						init_x <= init_x + 1;
 					end
 				end
-			endcase
+			// end
 
 			cell_val <= board_arr[y_coord][x_coord];
 		end

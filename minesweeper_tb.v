@@ -9,7 +9,6 @@ module minesweeper_tb;
 		wire		btnL_Pulse;
 
 	/* == OUTPUTS == */
-		wire		Ld7, Ld6, Ld5, Ld4, Ld3, Ld2, Ld1, Ld0;
 
 	/* == PARAMETERS == */
 		parameter x_size = 16;
@@ -21,26 +20,14 @@ module minesweeper_tb;
 		reg [(x_coord_bits - 1):0] x_coord;
 		reg [(y_coord_bits - 1):0] y_coord;
 		reg flag, open;
-		wire [4:0] cell_val;
+		wire [4:0] cell_val_board;
 		wire [1:0] cell_val_cover;
 		wire [(x_coord_bits + y_coord_bits - 1):0] num_mines;
-		wire [31:0] rand;
+		wire [31:0] rand, seed;
+		wire game_over_wire;
 
 	/* == INITIALIZE == */
-		task print_board;
-			begin: print
-				integer i, j;
-				for (i = 0; i < y_size; i = i + 1) begin
-					for (j = 0; j < x_size; j = j + 1) begin
-						y_coord = i;
-						x_coord = j;
-						#20
-						$write("%d ", cell_val);
-					end
-					$write("| ");
-				end
-			end
-		endtask
+		assign game_over_wire = (cell_val_cover[0] != 0) && (cell_val_board[4] != 0);
 
 		initial begin
 			Reset = 1;
@@ -55,13 +42,14 @@ module minesweeper_tb;
 
 			#103;
 
-			#100
-			btnL = 1;
-			#200;
-			btnL = 0;
+			#(16 * 16 * 20 * 2 + 100);
 
-			#(16 * 16 * 20 + 100);
-			print_board();
+			#100;
+			x_coord = 5'b00001;
+			open = 1'b1;
+			#20;
+			open = 1'b0;
+			#20;
 		end
 
 		initial begin
@@ -81,7 +69,9 @@ module minesweeper_tb;
 		board board_arr(
 			.clk(Clk), .reset(Reset),
 			.x_coord(x_coord), .y_coord(y_coord),
-			.cell_val(cell_val), .num_mines(num_mines), .rand(rand)
+			.cell_val(cell_val_board), .num_mines(num_mines),
+			.seed(seed), .rand(rand),
+			.is_init(), .init_x(), .init_y()
 		);
 
 		board_cover board_cover_arr(

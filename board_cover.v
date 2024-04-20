@@ -16,9 +16,13 @@ module board_cover(
 
 	reg [1:0] board_arr [0:(y_size - 1)][0:(x_size - 1)];
 
-	reg is_init = 1'b0;
+	reg is_init;
 	reg [(x_coord_bits - 1):0] init_x;
 	reg [(y_coord_bits - 1):0] init_y;
+
+	initial begin
+		is_init = 1'b0;
+	end
 
 	always @ (posedge clk, posedge reset) begin
 		if (reset) begin
@@ -59,11 +63,9 @@ module board_cover(
 					end
 				endcase
 			end
-		end
-	end
 
-	always @ (x_coord, y_coord, board_arr[y_coord][x_coord]) begin
-		cell_val <= board_arr[y_coord][x_coord];
+			cell_val <= board_arr[y_coord][x_coord];
+		end
 	end
 
 endmodule
