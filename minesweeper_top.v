@@ -57,11 +57,9 @@ module minesweeper_top (
 		reg [(x_coord_bits + y_coord_bits):0] cells_to_open;
 		reg [3:0] state;
 
-		wire inc_rand;
 		wire flag, open;
 		wire opened_cell;
 		wire play_pulse;
-		// reg game_over;
 
 		wire [1:0] is_init;
 		wire [31:0] rand, seed;
@@ -72,10 +70,9 @@ module minesweeper_top (
 		assign {QuadSpiFlashCS} = 1'b1;
 		assign glob_reset = Sw15;
 		assign reset = BtnC_Pulse && Sw0;
-		assign inc_rand = BtnC_Pulse && Sw2 && ~Sw0;
 
-		assign flag = BtnC_Pulse && Sw1 && ~Sw2 && ~Sw0 && (state == PLAY);
-		assign open = BtnC_Pulse && ~Sw1 && ~Sw2 && ~Sw0 && (state == PLAY);
+		assign flag = BtnC_Pulse && Sw1 && ~Sw0 && (state == PLAY);
+		assign open = BtnC_Pulse && ~Sw1 && ~Sw0 && (state == PLAY);
 
 		assign cell_val_apparent = (|cell_val_cover == 0) ? 5'b10000 : ((cell_val_cover[1] == 1) ? 5'b10001 : cell_val_board);
 
@@ -207,10 +204,10 @@ module minesweeper_top (
 		assign SSD6 = Sw14 ?	num_non_mines[3:0]	:	x_coord[3:0];
 		assign SSD5 = Sw14 ?	num_mines[7:4]		:	cells_to_open[7:4];
 		assign SSD4 = Sw14 ?	num_mines[3:0]		:	cells_to_open[3:0];
-		assign SSD3 = Sw14 ?	4'b0000				:	4'b0000;
-		assign SSD2 = Sw14 ?	4'b0000				:	state[3:0];
-		assign SSD1 = Sw14 ?	4'b0000				:	{3'b000, cell_val_apparent[4]};
-		assign SSD0 = Sw14 ?	4'b0000				:	cell_val_apparent[3:0];
+		assign SSD3 = Sw14 ?	rand[7:4]			:	4'b0000;
+		assign SSD2 = Sw14 ?	rand[3:0]			:	state[3:0];
+		assign SSD1 = Sw14 ?	seed[7:4]			:	{3'b000, cell_val_apparent[4]};
+		assign SSD0 = Sw14 ?	seed[3:0]			:	cell_val_apparent[3:0];
 
 		assign ssdscan_clk = DIV_CLK[19:17];
 		assign An0 = !(~(ssdscan_clk[2]) && ~(ssdscan_clk[1]) && ~(ssdscan_clk[0]));
