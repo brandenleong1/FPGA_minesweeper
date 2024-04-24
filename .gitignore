@@ -2,3 +2,5 @@
 *.vdi
 *.jou
 *.wdf
+*.sim
+*.srcs
