@@ -22,13 +22,20 @@
 // counter), 
 //////////////////////////////////////////////////////////////////////////////////
 module display_controller(
-	input clk,
-	output hSync, vSync,
-	output reg bright,
-	output reg[9:0] hCount, 
-	output reg [9:0] vCount // Covers 800, width of the screen, because it's 2^10
+	clk, hSync, vSync,
+	x_coord, y_coord,
+	bright, hCount, vCount // Covers 800, width of the screen, because it's 2^10
 	);
 	
+	parameter x_coord_bits = 4, y_coord_bits = 4;
+	
+	input clk;
+	output hSync, vSync;
+	output reg[(x_coord_bits - 1):0] x_coord;
+	output reg[(y_coord_bits - 1):0] y_coord;
+	output reg[9:0] hCount; 
+	output reg [9:0] vCount; // Covers 800, width of the screen, because it's 2^10
+	output reg bright;
 	reg pulse;
 	reg clk25;
 	
@@ -57,6 +64,28 @@ module display_controller(
 			begin
 			hCount <= 0;
 			vCount <= 0;
+			end
+		
+		if (vCount>=(13) && hCount>=(176) && hCount<=(656) && ((hCount-176)%32 == 0) && (x_coord != 15))
+			begin
+				x_coord <= x_coord + 1;
+			end
+		else if (vCount>=(13) && hCount>=(176) && hCount<=(656) && ((hCount-176)%32 == 0) && (x_coord == 15))
+			begin
+				x_coord <= 0;
+			end
+		if (vCount>=(13) && hCount>=(144) && hCount<=(656) && ((vCount-13)%32 == 0) && (y_coord != 15))
+			begin
+				y_coord <= y_coord + 1;
+			end
+		else if (vCount>=(13) && hCount>=(144) && hCount<=(656) && ((vCount-13)%32 == 0) && (y_coord == 15))
+			begin
+				y_coord <= 0;
+			end
+		else
+			begin
+			x_coord <= 0;
+			y_coord <= 0;
 			end
 		end
 		

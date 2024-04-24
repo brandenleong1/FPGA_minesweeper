@@ -85,7 +85,8 @@ module minesweeper_top (
 		assign flag = BtnC_Pulse && Sw1 && ~Sw0 && (state == PLAY);
 		assign open = BtnC_Pulse && ~Sw1 && ~Sw0 && (state == PLAY);
 
-		assign cell_val_apparent = (|cell_val_cover == 0) ? 5'b10000 : ((cell_val_cover[1] == 1) ? 5'b10001 : cell_val_board);
+		// assign cell_val_apparent = (|cell_val_cover == 0) ? 5'b10000 : ((cell_val_cover[1] == 1) ? 5'b10001 : cell_val_board);
+		assign cell_val_apparent = ((cell_val_cover[1] == 1) ? 5'b10001 : cell_val_board);
 
 		assign board_clk = ClkPort;
 
@@ -98,9 +99,6 @@ module minesweeper_top (
 
 		// assign sys_clk = board_clk;
 		assign sys_clk = DIV_CLK[0];
-		
-		display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
-		block_controller sc(.clk(move_clk), .masterclk(ClkPort), .bright(bright), .rst(reset), .x_coord(x_coord), .y_coord(y_coord), .x_pos(x_pos), .y_pos(y_pos), .hCount(hc), .vCount(vc), .rgb(rgb), .background(background));
 		
 		assign vgaR = rgb[11 : 8];
 		assign vgaG = rgb[7  : 4];
@@ -132,6 +130,9 @@ module minesweeper_top (
 			.SCEN(BtnC_Pulse), .MCEN( ), .CCEN( )
 		);
 
+		
+		reg [4:0] test_apparent_val;
+		
 	/* == INITIALIZATION == */
 		initial begin
 			x_pos = 0;
@@ -141,6 +142,9 @@ module minesweeper_top (
 		end
 
 		always @ (posedge sys_clk, posedge reset) begin
+			if ((y_pos == y_coord) && (x_pos == x_coord)) begin
+				test_apparent_val <= cell_val_apparent;
+			end
 			if (reset) begin
 				state <= INIT;
 			end else begin
@@ -209,8 +213,18 @@ module minesweeper_top (
 			.clk(sys_clk), .reset(reset),
 			.flag(flag), .open(open),
 			.x_coord(x_coord), .y_coord(y_coord),
+			.x_pos(x_pos), .y_pos(y_pos),
 			.cell_val(cell_val_cover), .opened_cell(opened_cell)
 		);
+		
+		display_controller dc(.clk(ClkPort), .hSync(hSync), .x_coord(x_coord),
+			.y_coord(y_coord),
+			.vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
+		block_controller sc(.masterclk(ClkPort), .bright(bright), .rst(reset),
+			.cell_apparent(cell_val_apparent), .x_pos(x_pos),
+			.y_pos(y_pos), .hCount(hc), .vCount(vc),
+			.rgb(rgb), .background(background));
+		
 
 	/* == OUTPUT: LEDs == */
 		assign {Ld7, Ld6, Ld5, Ld4}		=	{0, 0, 0, BtnC};
@@ -223,8 +237,8 @@ module minesweeper_top (
 		assign SSD4 = Sw14 ?	num_mines[3:0]		:	cells_to_open[3:0];
 		assign SSD3 = Sw14 ?	rand[7:4]			:	4'b0000;
 		assign SSD2 = Sw14 ?	rand[3:0]			:	state[3:0];
-		assign SSD1 = Sw14 ?	seed[7:4]			:	{3'b000, cell_val_apparent[4]};
-		assign SSD0 = Sw14 ?	seed[3:0]			:	cell_val_apparent[3:0];
+		assign SSD1 = Sw14 ?	seed[7:4]			:	{3'b000, test_apparent_val[4]};
+		assign SSD0 = Sw14 ?	seed[3:0]			:	test_apparent_val[3:0];
 
 		assign ssdscan_clk = DIV_CLK[19:17];
 		assign An0 = !(~(ssdscan_clk[2]) && ~(ssdscan_clk[1]) && ~(ssdscan_clk[0]));
