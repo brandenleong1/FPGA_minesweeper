@@ -79,6 +79,30 @@ set_property PACKAGE_PIN U17 [get_ports {Ld6}]
 set_property PACKAGE_PIN U16 [get_ports {Ld7}] 
 	set_property IOSTANDARD LVCMOS33 [get_ports {Ld7}]
 
+# set_property PACKAGE_PIN V16 [get_ports {Ld8}] 
+# 	set_property IOSTANDARD LVCMOS33 [get_ports {Ld8}]
+
+# set_property PACKAGE_PIN T15 [get_ports {Ld9}] 
+# 	set_property IOSTANDARD LVCMOS33 [get_ports {Ld9}]
+
+# set_property PACKAGE_PIN U14 [get_ports {Ld10}] 
+# 	set_property IOSTANDARD LVCMOS33 [get_ports {Ld10}]
+
+# set_property PACKAGE_PIN T16 [get_ports {Ld11}] 
+# 	set_property IOSTANDARD LVCMOS33 [get_ports {Ld11}]
+
+# set_property PACKAGE_PIN V15 [get_ports {Ld12}] 
+# 	set_property IOSTANDARD LVCMOS33 [get_ports {Ld12}]
+
+# set_property PACKAGE_PIN V14 [get_ports {Ld13}] 
+# 	set_property IOSTANDARD LVCMOS33 [get_ports {Ld13}]
+
+# set_property PACKAGE_PIN V12 [get_ports {Ld14}] 
+# 	set_property IOSTANDARD LVCMOS33 [get_ports {Ld14}]
+
+# set_property PACKAGE_PIN V11 [get_ports {Ld15}] 
+# 	set_property IOSTANDARD LVCMOS33 [get_ports {Ld15}]
+
 set_property PACKAGE_PIN T10 [get_ports {Ca}] 
 	set_property IOSTANDARD LVCMOS33 [get_ports {Ca}]
 

@@ -5,10 +5,12 @@ module minesweeper_top (
 		BtnC,											// the Center button
 		Sw15, Sw14, Sw13, Sw12, Sw11, Sw10, Sw9, Sw8,	// left 8 switches
 		Sw7, Sw6, Sw5, Sw4, Sw3, Sw2, Sw1, Sw0,			// right 8 switches
-		Ld7, Ld6, Ld5, Ld4, Ld3, Ld2, Ld1, Ld0,			// 8 LEDs
+		Ld7, Ld6, Ld5, Ld4, Ld3, Ld2, Ld1, Ld0,			// right 8 LEDs
 		An7, An6, An5, An4, An3, An2, An1, An0,			// 8 anodes
 		Ca, Cb, Cc, Cd, Ce, Cf, Cg,						// 7 cathodes
-		Dp												// Dot Point Cathode on SSDs
+		Dp,												// Dot Point Cathode on SSDs
+		vgaR, vgaG, vgaB,
+		hSync, vSync
 	);
 
 	/* == INPUTS == */
@@ -18,19 +20,34 @@ module minesweeper_top (
 		input		Sw7, Sw6, Sw5, Sw4, Sw3, Sw2, Sw1, Sw0;
 
 	/* == OUTPUTS == */
+		output		hSync, vSync;
+		output		[3:0] vgaR, vgaG, vgaB;
 		output		QuadSpiFlashCS;
 		output		Ld7, Ld6, Ld5, Ld4, Ld3, Ld2, Ld1, Ld0;
 		output		Ca, Cb, Cc, Cd, Ce, Cf, Cg, Dp;
 		output		An7, An6, An5, An4, An3, An2, An1, An0;
 
 	/* == PARAMETERS == */
+		parameter debounce_N_dc = 24;
+
 		parameter x_size = 16;
 		parameter y_size = 16;
 		parameter x_coord_bits = 4;
 		parameter y_coord_bits = 4;
 
+		localparam
+			INIT =	4'b0001,
+			PLAY =	4'b0010,
+			WIN	=	4'b0100,
+			LOSE =	4'b1000;
+
 	/* == LOCAL SIGNALS == */
-		wire		reset, ClkPort;
+		wire bright;
+		wire[9:0] hc, vc;
+		wire [11:0] rgb;
+		wire [11:0] background;
+	
+		wire		glob_reset, reset, ClkPort;
 		wire		board_clk, sys_clk;
 		wire [2:0]	ssdscan_clk;
 		reg [26:0]	DIV_CLK;
@@ -39,154 +56,175 @@ module minesweeper_top (
 		reg [3:0]	SSD;
 		wire [3:0]	SSD7, SSD6, SSD5, SSD4, SSD3, SSD2, SSD1, SSD0;
 		reg [7:0]	SSD_CATHODES;
-		wire [4:0]	btns; // L, U, D, R, C
 
-		reg [(x_coord_bits - 1):0] x_coord;
-		reg [(y_coord_bits - 1):0] y_coord;
-		// wire [(x_coord_bits - 1):0] x_coord;
-		// wire [(y_coord_bits - 1):0] y_coord;
+		wire [(x_coord_bits - 1):0] x_coord;
+		wire [(y_coord_bits - 1):0] y_coord;
+		reg [(x_coord_bits - 1):0] x_pos;
+		reg [(y_coord_bits - 1):0] y_pos;
 		wire [4:0] cell_val_board;
 		wire [1:0] cell_val_cover;
-		wire [(x_coord_bits + y_coord_bits - 1):0] num_mines;
-		wire [31:0] rand, seed;
-		wire flag, open;
+		wire [4:0] cell_val_apparent;
+		wire [(x_coord_bits + y_coord_bits):0] num_mines, num_non_mines;
+		reg [(x_coord_bits + y_coord_bits):0] cells_to_open;
+		reg [3:0] state;
 
-		wire is_init;
-		reg test;
+		wire flag, open;
+		wire opened_cell;
+		wire play_pulse;
+
+		wire [1:0] is_init;
+		wire [31:0] rand, seed;
+		wire [(x_coord_bits - 1):0] init_x;
+		wire [(y_coord_bits - 1):0] init_y;
 
 	/* == ASSIGNMENTS == */
 		assign {QuadSpiFlashCS} = 1'b1;
-		assign reset = BtnC && Sw0;
+		assign glob_reset = Sw15;
+		assign reset = BtnC_Pulse && Sw0;
 
-		assign btns = {BtnL_Pulse, BtnU_Pulse, BtnD_Pulse, BtnR_Pulse, BtnC_Pulse};
+		assign flag = BtnC_Pulse && Sw1 && ~Sw0 && (state == PLAY);
+		assign open = BtnC_Pulse && ~Sw1 && ~Sw0 && (state == PLAY);
 
-		// assign y_coord = {Sw15, Sw14, Sw13, Sw12};
-		// assign x_coord = {Sw11, Sw10, Sw9, Sw8};
+		assign cell_val_apparent = (|cell_val_cover == 0) ? 5'b10000 : ((cell_val_cover[1] == 1) ? 5'b10001 : cell_val_board);
 
-		assign flag = BtnC_Pulse && Sw1 && ~Sw0;
-		assign open = BtnC_Pulse && ~Sw1 && ~Sw0;
+		assign board_clk = ClkPort;
 
-	/* == CLOCK DIVISION == */
-		BUFGP BUFGP1(board_clk, ClkPort);
-
-		always @ (posedge board_clk, posedge reset) begin
-			if (reset)
+		always @ (posedge board_clk, posedge glob_reset) begin
+			if (glob_reset)
 				DIV_CLK <= 0;
 			else
 				DIV_CLK <= DIV_CLK + 1'b1;
 		end
 
-		assign sys_clk = board_clk;
-		// assign sys_clk = DIV_CLK[0];
+		// assign sys_clk = board_clk;
+		assign sys_clk = DIV_CLK[0];
+		
+		display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
+		block_controller sc(.clk(move_clk), .masterclk(ClkPort), .bright(bright), .rst(reset), .x_coord(x_coord), .y_coord(y_coord), .x_pos(x_pos), .y_pos(y_pos), .hCount(hc), .vCount(vc), .rgb(rgb), .background(background));
+		
+		assign vgaR = rgb[11 : 8];
+		assign vgaG = rgb[7  : 4];
+		assign vgaB = rgb[3  : 0];
 
 	/* == DEBOUNCING == */
-		debouncer #(.N_dc(28)) debouncer_L(
-			.CLK(sys_clk), .RESET(reset), .PB(BtnL), .DPB( ), 
+		debouncer #(.N_dc(debounce_N_dc)) debouncer_L(
+			.CLK(sys_clk), .RESET(glob_reset), .PB(BtnL), .DPB( ), 
 			.SCEN(BtnL_Pulse), .MCEN( ), .CCEN( )
 		);
 
-		debouncer #(.N_dc(28)) debouncer_U(
-			.CLK(sys_clk), .RESET(reset), .PB(BtnU), .DPB( ), 
+		debouncer #(.N_dc(debounce_N_dc)) debouncer_U(
+			.CLK(sys_clk), .RESET(glob_reset), .PB(BtnU), .DPB( ), 
 			.SCEN(BtnU_Pulse), .MCEN( ), .CCEN( )
 		);
 
-		debouncer #(.N_dc(28)) debouncer_D(
-			.CLK(sys_clk), .RESET(reset), .PB(BtnD), .DPB( ), 
+		debouncer #(.N_dc(debounce_N_dc)) debouncer_D(
+			.CLK(sys_clk), .RESET(glob_reset), .PB(BtnD), .DPB( ), 
 			.SCEN(BtnD_Pulse), .MCEN( ), .CCEN( )
 		);
 
-		debouncer #(.N_dc(28)) debouncer_R(
-			.CLK(sys_clk), .RESET(reset), .PB(BtnR), .DPB( ), 
+		debouncer #(.N_dc(debounce_N_dc)) debouncer_R(
+			.CLK(sys_clk), .RESET(glob_reset), .PB(BtnR), .DPB( ), 
 			.SCEN(BtnR_Pulse), .MCEN( ), .CCEN( )
 		);
 
-		debouncer #(.N_dc(28)) debouncer_C(
-			.CLK(sys_clk), .RESET(reset), .PB(BtnC), .DPB( ), 
+		debouncer #(.N_dc(debounce_N_dc)) debouncer_C(
+			.CLK(sys_clk), .RESET(glob_reset), .PB(BtnC), .DPB( ), 
 			.SCEN(BtnC_Pulse), .MCEN( ), .CCEN( )
 		);
 
 	/* == INITIALIZATION == */
 		initial begin
-			x_coord = 0;
-			y_coord = 0;
-			test = 1'b0;
+			x_pos = 0;
+			y_pos = 0;
+			state = INIT;
+			// game_over = 0;
 		end
 
-		always @ (posedge sys_clk) begin
+		always @ (posedge sys_clk, posedge reset) begin
 			if (reset) begin
-
-				x_coord = 0;
-				y_coord = 0;
-				test = 1'b0;
-
+				state <= INIT;
 			end else begin
-
-				if (BtnC_Pulse || BtnL_Pulse) begin
-					test = ~test;
-				end
-
-				case (btns)
-					5'b10000: begin // LEFT
-						x_coord = x_coord - 1;
-						if (x_coord >= x_size) begin
-							x_coord = x_size - 1;
+				case (state)
+					INIT: begin
+						if (|is_init == 0) begin
+							state <= PLAY;
+							cells_to_open <= num_non_mines;
 						end
 					end
 
-					5'b01000: begin // UP
-						y_coord = y_coord - 1;
-						if (y_coord >= y_size) begin
-							y_coord = y_size - 1;
+					PLAY: begin
+						if ((opened_cell == 1'b1) && (cell_val_apparent != 5'b11111)) begin
+							cells_to_open <= cells_to_open - 1;
+						end
+
+						if ((BtnL_Pulse == 1'b1) && (x_pos != 0)) begin
+							x_pos <= x_pos - 1;
+						end
+
+						if ((BtnU_Pulse == 1'b1) && (y_pos != 0)) begin
+							y_pos <= y_pos - 1;
+						end
+
+						if ((BtnD_Pulse == 1'b1) && ((y_pos + 1) < y_size)) begin
+							y_pos <= y_pos + 1;
+						end
+
+						if ((BtnR_Pulse == 1'b1) && ((x_pos + 1) < x_size)) begin
+							x_pos <= x_pos + 1;
+						end
+
+						if (cell_val_apparent == 5'b11111) begin
+							state <= LOSE;
+						end else if (cells_to_open == 0) begin
+							state <= WIN;
 						end
 					end
 
-					5'b00100: begin // DOWN
-						y_coord = y_coord + 1;
-						if (y_coord >= y_size) begin
-							y_coord = y_size - 1;
+					WIN: begin
+						if (BtnC_Pulse == 1'b1) begin
+							state <= INIT;
 						end
 					end
 
-					5'b00010: begin // RIGHT
-						x_coord = x_coord + 1;
-						if (x_coord >= x_size) begin
-							x_coord = x_size - 1;
+					LOSE: begin
+						if (BtnC_Pulse == 1'b1) begin
+							state <= INIT;
 						end
 					end
 				endcase
-
 			end
 		end
 
 	/* == DESIGN == */
+
 		board board_arr(
 			.clk(sys_clk), .reset(reset),
-			.btnC_Pulse(BtnC_Pulse),
 			.x_coord(x_coord), .y_coord(y_coord),
-			.cell_val(cell_val_board), .num_mines(num_mines),
-			.seed(seed), .rand(rand), .is_init(is_init)
+			.cell_val(cell_val_board), .seed(seed), .rand(rand),
+			.num_mines(num_mines), .num_non_mines(num_non_mines),
+			.is_init(is_init), .init_x(init_x), .init_y(init_y)
 		);
 
 		board_cover board_cover_arr(
 			.clk(sys_clk), .reset(reset),
 			.flag(flag), .open(open),
 			.x_coord(x_coord), .y_coord(y_coord),
-			.cell_val(cell_val_cover), .is_init()
+			.cell_val(cell_val_cover), .opened_cell(opened_cell)
 		);
 
 	/* == OUTPUT: LEDs == */
-		assign {Ld7, Ld6, Ld5, Ld4} = {flag, open, reset, BtnC};
-		assign {Ld3, Ld2, Ld1, Ld0} = {BtnL, BtnU, BtnR, BtnD};
+		assign {Ld7, Ld6, Ld5, Ld4}		=	{0, 0, 0, BtnC};
+		assign {Ld3, Ld2, Ld1, Ld0}		=	{BtnL, BtnU, BtnR, BtnD};
 
 	/* == OUTPUT: SSDs == */
-		assign SSD7 = y_coord[3:0];
-		assign SSD6 = x_coord[3:0];
-		assign SSD5 = {3'b000, cell_val_board[4]};
-		assign SSD4 = cell_val_board[3:0];
-		assign SSD3 = rand[7:4];
-		assign SSD2 = rand[3:0];
-		assign SSD1 = num_mines[7:4];
-		assign SSD0 = num_mines[3:0];
+		assign SSD7 = Sw14 ?	num_non_mines[7:4]	:	y_pos[3:0];
+		assign SSD6 = Sw14 ?	num_non_mines[3:0]	:	x_pos[3:0];
+		assign SSD5 = Sw14 ?	num_mines[7:4]		:	cells_to_open[7:4];
+		assign SSD4 = Sw14 ?	num_mines[3:0]		:	cells_to_open[3:0];
+		assign SSD3 = Sw14 ?	rand[7:4]			:	4'b0000;
+		assign SSD2 = Sw14 ?	rand[3:0]			:	state[3:0];
+		assign SSD1 = Sw14 ?	seed[7:4]			:	{3'b000, cell_val_apparent[4]};
+		assign SSD0 = Sw14 ?	seed[3:0]			:	cell_val_apparent[3:0];
 
 		assign ssdscan_clk = DIV_CLK[19:17];
 		assign An0 = !(~(ssdscan_clk[2]) && ~(ssdscan_clk[1]) && ~(ssdscan_clk[0]));

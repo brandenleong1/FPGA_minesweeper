@@ -1,8 +1,8 @@
-Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 ------------------------------------------------------------------------------------
-| Tool Version : Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
-| Date         : Tue Oct 20 00:03:01 2020
-| Host         : DESKTOP-JS3JO0N running 64-bit major release  (build 9200)
+| Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
+| Date         : Tue Apr 23 20:17:44 2024
+| Host         : GDESK-28 running 64-bit major release  (build 9200)
 | Command      : report_control_sets -verbose -file vga_top_control_sets_placed.rpt
 | Design       : vga_top
 | Device       : xc7a100t
@@ -27,7 +27,7 @@ Table of Contents
 |    Minimum number of control sets                        |    11 |
 |    Addition due to synthesis replication                 |     0 |
 |    Addition due to physical synthesis replication        |     0 |
-| Unused register locations in slices containing registers |    72 |
+| Unused register locations in slices containing registers |    64 |
 +----------------------------------------------------------+-------+
 * Control sets can be merged at opt_design using control_set_merge or merge_equivalent_drivers
 ** Run report_qor_suggestions for automated merging and remapping suggestions
@@ -40,10 +40,10 @@ Table of Contents
 |       Fanout       | Count |
 +--------------------+-------+
 | Total control sets |    11 |
-| >= 0 to < 4        |     6 |
-| >= 4 to < 6        |     0 |
-| >= 6 to < 8        |     0 |
-| >= 8 to < 10       |     3 |
+| >= 0 to < 4        |     5 |
+| >= 4 to < 6        |     1 |
+| >= 6 to < 8        |     1 |
+| >= 8 to < 10       |     2 |
 | >= 10 to < 12      |     1 |
 | >= 12 to < 14      |     0 |
 | >= 14 to < 16      |     0 |
@@ -59,31 +59,31 @@ Table of Contents
 | Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
 +--------------+-----------------------+------------------------+-----------------+--------------+
 | No           | No                    | No                     |               3 |            3 |
-| No           | No                    | Yes                    |              22 |            7 |
-| No           | Yes                   | No                     |              10 |            4 |
-| Yes          | No                    | No                     |               1 |            1 |
-| Yes          | No                    | Yes                    |              19 |           12 |
-| Yes          | Yes                   | No                     |               9 |            5 |
+| No           | No                    | Yes                    |              22 |            6 |
+| No           | Yes                   | No                     |              10 |            3 |
+| Yes          | No                    | No                     |               4 |            2 |
+| Yes          | No                    | Yes                    |              19 |           11 |
+| Yes          | Yes                   | No                     |               6 |            2 |
 +--------------+-----------------------+------------------------+-----------------+--------------+
 
 
 4. Detailed Control Set Information
 -----------------------------------
 
-+--------------------+---------------------------+----------------------+------------------+----------------+
-|    Clock Signal    |       Enable Signal       |   Set/Reset Signal   | Slice Load Count | Bel Load Count |
-+--------------------+---------------------------+----------------------+------------------+----------------+
-|  dc/pulse          |                           |                      |                1 |              1 |
-|  dc/clk            |                           |                      |                1 |              1 |
-|  dc/clk            | dc/hCount[9]_i_1_n_0      |                      |                1 |              1 |
-|  ClkPort_IBUF_BUFG |                           |                      |                1 |              1 |
-|  move_clk          | sc/background[11]_i_1_n_0 | BtnC_IBUF            |                1 |              1 |
-|  move_clk          |                           | BtnC_IBUF            |                2 |              2 |
-|  dc/clk            | dc/hCount[9]_i_1_n_0      | dc/vCount[9]_i_1_n_0 |                5 |              9 |
-|  move_clk          | sc/xpos[9]_i_1_n_0        | BtnC_IBUF            |                6 |              9 |
-|  move_clk          | sc/ypos[9]_i_1_n_0        | BtnC_IBUF            |                5 |              9 |
-|  dc/clk            |                           | dc/hCount[9]_i_1_n_0 |                4 |             10 |
-|  ClkPort_IBUF_BUFG |                           | BtnC_IBUF            |                5 |             20 |
-+--------------------+---------------------------+----------------------+------------------+----------------+
++--------------------+---------------------------+----------------------+------------------+----------------+--------------+
+|    Clock Signal    |       Enable Signal       |   Set/Reset Signal   | Slice Load Count | Bel Load Count | Bels / Slice |
++--------------------+---------------------------+----------------------+------------------+----------------+--------------+
+|  ClkPort_IBUF_BUFG |                           |                      |                1 |              1 |         1.00 |
+|  move_clk          | sc/background[11]_i_1_n_0 | BtnC_IBUF            |                1 |              1 |         1.00 |
+|  dc/clk            |                           |                      |                1 |              1 |         1.00 |
+|  dc/pulse          |                           |                      |                1 |              1 |         1.00 |
+|  move_clk          |                           | BtnC_IBUF            |                1 |              2 |         2.00 |
+|  dc/clk            | dc/hCount[9]_i_1_n_0      |                      |                2 |              4 |         2.00 |
+|  dc/clk            | dc/hCount[9]_i_1_n_0      | dc/vCount[9]_i_1_n_0 |                2 |              6 |         3.00 |
+|  move_clk          | sc/xpos[9]_i_1_n_0        | BtnC_IBUF            |                6 |              9 |         1.50 |
+|  move_clk          | sc/ypos[9]_i_1_n_0        | BtnC_IBUF            |                4 |              9 |         2.25 |
+|  dc/clk            |                           | dc/hCount[9]_i_1_n_0 |                3 |             10 |         3.33 |
+|  ClkPort_IBUF_BUFG |                           | BtnC_IBUF            |                5 |             20 |         4.00 |
++--------------------+---------------------------+----------------------+------------------+----------------+--------------+
 
 

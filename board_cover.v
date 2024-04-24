@@ -2,7 +2,7 @@ module board_cover(
 	clk, reset,
 	flag, open,
 	x_coord, y_coord,
-	cell_val, is_init
+	cell_val, opened_cell
 );
 
 	parameter x_size = 16, y_size = 16;
@@ -13,18 +13,26 @@ module board_cover(
 	input [(x_coord_bits - 1):0] x_coord;
 	input [(y_coord_bits - 1):0] y_coord;
 	output reg [1:0] cell_val;
+	output reg opened_cell;
 
 	reg [1:0] board_arr [0:(y_size - 1)][0:(x_size - 1)];
 
-	output reg is_init = 1'b0;
+	reg is_init;
 	reg [(x_coord_bits - 1):0] init_x;
 	reg [(y_coord_bits - 1):0] init_y;
 
+	initial begin
+		is_init = 1'b0;
+		opened_cell = 1'b0;
+	end
+
 	always @ (posedge clk, posedge reset) begin
+		opened_cell <= 1'b0;
+		
 		if (reset) begin
-			is_init = 1'b1;
-			init_x = 0;
-			init_y = 0;
+			is_init <= 1'b1;
+			init_x <= 0;
+			init_y <= 0;
 		end else begin
 			if (is_init == 1'b1) begin
 				board_arr[init_y][init_x] <= 2'b00;
@@ -46,6 +54,7 @@ module board_cover(
 							board_arr[y_coord][x_coord] <= 2'b10;
 						end else if (~flag & open) begin
 							board_arr[y_coord][x_coord] <= 2'b01;
+							opened_cell <= 1'b1;
 						end
 					end
 
@@ -59,11 +68,9 @@ module board_cover(
 					end
 				endcase
 			end
-		end
-	end
 
-	always @ (x_coord, y_coord, board_arr[y_coord][x_coord]) begin
-		cell_val <= board_arr[y_coord][x_coord];
+			cell_val <= board_arr[y_coord][x_coord];
+		end
 	end
 
 endmodule

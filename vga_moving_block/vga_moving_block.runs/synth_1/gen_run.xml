@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xc7a100tcsg324-1" LaunchTime="1603170033">
+<GenRun Id="synth_1" LaunchPart="xc7a100tcsg324-1" LaunchTime="1713928581" LaunchIncrCheckpoint="$PSRCDIR/utils_1/imports/synth_1/vga_top.dcp" LaunchWriteIncrSynthDcp="true">
   <File Type="PA-TCL" Name="vga_top.tcl"/>
   <File Type="RDS-PROPCONSTRS" Name="vga_top_drc_synth.rpt"/>
   <File Type="REPORTS-TCL" Name="vga_top_reports.tcl"/>
@@ -9,7 +9,7 @@
   <File Type="RDS-DCP" Name="vga_top.dcp"/>
   <File Type="VDS-TIMINGSUMMARY" Name="vga_top_timing_summary_synth.rpt"/>
   <File Type="VDS-TIMING-PB" Name="vga_top_timing_summary_synth.pb"/>
-  <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1">
+  <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PSRCDIR/sources_1">
     <Filter Type="Srcs"/>
     <File Path="$PPRDIR/src/block_controller.v">
       <FileInfo>
@@ -25,7 +25,14 @@
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
-    <File Path="$PPRDIR/src/vga_top.v">
+    <File Path="$PPRDIR/src/mine_12_bit_rom.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/src/A7_vga_top.v">
       <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="implementation"/>
@@ -40,7 +47,7 @@
   </FileSet>
   <FileSet Name="constrs_in" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1">
     <Filter Type="Constrs"/>
-    <File Path="$PPRDIR/src/nexys4.xdc">
+    <File Path="$PPRDIR/src/A7_nexys7.xdc">
       <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="implementation"/>
@@ -52,6 +59,14 @@
   </FileSet>
   <FileSet Name="utils" Type="Utils" RelSrcDir="$PSRCDIR/utils_1">
     <Filter Type="Utils"/>
+    <File Path="$PSRCDIR/utils_1/imports/synth_1/vga_top.dcp">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedInSteps" Val="synth_1"/>
+        <Attr Name="AutoDcp" Val="1"/>
+      </FileInfo>
+    </File>
     <Config>
       <Option Name="TopAutoSet" Val="TRUE"/>
     </Config>

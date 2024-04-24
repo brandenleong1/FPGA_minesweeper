@@ -1,8 +1,8 @@
-Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
-| Tool Version : Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
-| Date         : Tue Oct 20 00:04:26 2020
-| Host         : DESKTOP-JS3JO0N running 64-bit major release  (build 9200)
+| Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
+| Date         : Tue Apr 23 20:18:12 2024
+| Host         : GDESK-28 running 64-bit major release  (build 9200)
 | Command      : report_methodology -file vga_top_methodology_drc_routed.rpt -pb vga_top_methodology_drc_routed.pb -rpx vga_top_methodology_drc_routed.rpx
 | Design       : vga_top
 | Device       : xc7a100tcsg324-1
@@ -23,12 +23,12 @@ Table of Contents
           Floorplan: design_1
       Design limits: <entire design considered>
              Max violations: <unlimited>
-             Violations found: 52
+             Violations found: 64
 +-----------+------------------+-------------------------------+------------+
 | Rule      | Severity         | Description                   | Violations |
 +-----------+------------------+-------------------------------+------------+
 | TIMING-17 | Critical Warning | Non-clocked sequential cell   | 43         |
-| TIMING-18 | Warning          | Missing input or output delay | 9          |
+| TIMING-18 | Warning          | Missing input or output delay | 21         |
 +-----------+------------------+-------------------------------+------------+
 
 2. REPORT DETAILS
@@ -291,6 +291,66 @@ Related violations: <none>
 TIMING-18#9 Warning
 Missing input or output delay  
 An output delay is missing on Cg relative to clock(s) ClkPort
+Related violations: <none>
+
+TIMING-18#10 Warning
+Missing input or output delay  
+An output delay is missing on vgaB[0] relative to clock(s) ClkPort
+Related violations: <none>
+
+TIMING-18#11 Warning
+Missing input or output delay  
+An output delay is missing on vgaB[1] relative to clock(s) ClkPort
+Related violations: <none>
+
+TIMING-18#12 Warning
+Missing input or output delay  
+An output delay is missing on vgaB[2] relative to clock(s) ClkPort
+Related violations: <none>
+
+TIMING-18#13 Warning
+Missing input or output delay  
+An output delay is missing on vgaB[3] relative to clock(s) ClkPort
+Related violations: <none>
+
+TIMING-18#14 Warning
+Missing input or output delay  
+An output delay is missing on vgaG[0] relative to clock(s) ClkPort
+Related violations: <none>
+
+TIMING-18#15 Warning
+Missing input or output delay  
+An output delay is missing on vgaG[1] relative to clock(s) ClkPort
+Related violations: <none>
+
+TIMING-18#16 Warning
+Missing input or output delay  
+An output delay is missing on vgaG[2] relative to clock(s) ClkPort
+Related violations: <none>
+
+TIMING-18#17 Warning
+Missing input or output delay  
+An output delay is missing on vgaG[3] relative to clock(s) ClkPort
+Related violations: <none>
+
+TIMING-18#18 Warning
+Missing input or output delay  
+An output delay is missing on vgaR[0] relative to clock(s) ClkPort
+Related violations: <none>
+
+TIMING-18#19 Warning
+Missing input or output delay  
+An output delay is missing on vgaR[1] relative to clock(s) ClkPort
+Related violations: <none>
+
+TIMING-18#20 Warning
+Missing input or output delay  
+An output delay is missing on vgaR[2] relative to clock(s) ClkPort
+Related violations: <none>
+
+TIMING-18#21 Warning
+Missing input or output delay  
+An output delay is missing on vgaR[3] relative to clock(s) ClkPort
 Related violations: <none>
 
 
