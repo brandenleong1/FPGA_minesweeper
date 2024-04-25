@@ -71,6 +71,8 @@ module minesweeper_top (
 		wire flag, open;
 		wire opened_cell;
 		wire play_pulse;
+		
+		reg [1:0]splash_screen;
 
 		wire [1:0] is_init;
 		wire [31:0] rand, seed;
@@ -135,6 +137,7 @@ module minesweeper_top (
 		
 	/* == INITIALIZATION == */
 		initial begin
+			splash_screen = 2'b01; // Start screen
 			x_pos = 0;
 			y_pos = 0;
 			state = INIT;
@@ -150,7 +153,7 @@ module minesweeper_top (
 			end else begin
 				case (state)
 					INIT: begin
-						if (|is_init == 0) begin
+						if (|is_init == 0)begin
 							state <= PLAY;
 							cells_to_open <= num_non_mines;
 						end
@@ -159,28 +162,35 @@ module minesweeper_top (
 					PLAY: begin
 						if ((opened_cell == 1'b1) && (cell_val_apparent != 5'b11111)) begin
 							cells_to_open <= cells_to_open - 1;
+							splash_screen <= 2'b00;
 						end
 
 						if ((BtnL_Pulse == 1'b1) && (x_pos != 0)) begin
 							x_pos <= x_pos - 1;
+							splash_screen <= 2'b00;
 						end
 
 						if ((BtnU_Pulse == 1'b1) && (y_pos != 0)) begin
 							y_pos <= y_pos - 1;
+							splash_screen <= 2'b00;
 						end
 
 						if ((BtnD_Pulse == 1'b1) && ((y_pos + 1) < y_size)) begin
 							y_pos <= y_pos + 1;
+							splash_screen <= 2'b00;
 						end
 
 						if ((BtnR_Pulse == 1'b1) && ((x_pos + 1) < x_size)) begin
 							x_pos <= x_pos + 1;
+							splash_screen <= 2'b00;
 						end
 
 						if (cell_val_apparent == 5'b11111) begin
 							state <= LOSE;
+							splash_screen <= 2'b10; // Gameover screen
 						end else if (cells_to_open == 0) begin
 							state <= WIN;
+							splash_screen <= 2'b11; // You Win screen
 						end
 					end
 
@@ -222,7 +232,7 @@ module minesweeper_top (
 			.vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
 		block_controller sc(.masterclk(ClkPort), .bright(bright), .rst(reset),
 			.cell_apparent(cell_val_apparent), .x_coord(x_coord), .y_coord(y_coord),
-			.x_pos(x_pos), .y_pos(y_pos), .hCount(hc), .vCount(vc),
+			.x_pos(x_pos), .y_pos(y_pos), .hCount(hc), .vCount(vc), .splash_screen(splash_screen),
 			.rgb(rgb), .background(background));
 		
 
