@@ -21,6 +21,7 @@ module block_controller(
 	reg [9:0] xpos, ypos;
 	reg [9:0] xcoord, ycoord;
 	wire [11:0] spriteColor;
+	wire [11:0] gandhiColor;
 	reg [9:0] spriteRow;
 	reg [9:0] spriteCol;
 	
@@ -29,28 +30,32 @@ module block_controller(
 		background <= 12'b1111_1111_1111;
 	end
 	all_sprites_rom sprites(.clk(masterclk), .row(spriteRow), .col(spriteCol), .color_data(spriteColor));
+	gandhi_rom gandhi(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(gandhiColor));
 	/*when outputting the rgb value in an always block like this, make sure to include the if(~bright) statement, as this ensures the monitor 
 	will output some data to every pixel and not just the images you are trying to display*/
 	always@ (*) begin
     	if(~bright )	//force black if not inside the display area
 			rgb = 12'b0000_0000_0000;
 		else if (splash_screen == 2'b01 && start_fill) begin
-			spriteRow <= vCount-136;
-			spriteCol <= hCount-274;
+			spriteRow <= vCount-76;
+			spriteCol <= hCount-344;
 			rgb = spriteColor;
 		end
 		else if (splash_screen == 2'b10 && lose_fill) begin
-			spriteRow <= vCount-136;
-			spriteCol <= hCount-274;
+			spriteRow <= vCount-34;
+			spriteCol <= hCount-324;
 			rgb = spriteColor;
 		end
 		else if (splash_screen == 2'b11 && win_fill) begin
-			spriteRow <= vCount-136;
-			spriteCol <= hCount-274;
+			spriteRow <= vCount+30;
+			spriteCol <= hCount-374;
 			rgb = spriteColor;
 		end
 		else if (block_fill)
 			rgb = CURSOR_COLOR;
+		else if (grid_fill && cell_apparent == 5'b10001) begin
+			rgb = gandhiColor;
+		end
 		else if (grid_fill) begin
 			case (cell_apparent)
 				5'b10000: begin // Cover
@@ -113,9 +118,9 @@ module block_controller(
 	(vCount>=(ypos) && vCount <= (ypos+29) && hCount<=(xpos+4) && hCount>=(xpos+1)) || 
 	(vCount>=(ypos) && vCount <= (ypos+29) && hCount<=(xpos+29) && hCount>=(xpos+26));
 	assign grid_fill=vCount>=(36) && hCount>=(224) && hCount<=(704);
-	assign win_fill=vCount>=(136) && vCount <196 && hCount>=(274) && hCount<=(500);
-	assign lose_fill=vCount>=(136) && vCount <196 && hCount>=(274) && hCount<=(500);
-	assign start_fill=vCount>=(136) && vCount <196 && hCount>=(274) && hCount<=(550);
+	assign win_fill=vCount>=(136) && vCount <176 && hCount>=(339) && hCount<=(589);
+	assign lose_fill=vCount>=(136) && vCount <176 && hCount>=(339) && hCount<=(549);
+	assign start_fill=vCount>=(136) && vCount <176 && hCount>=(344) && hCount<=(584);
 	
 	always@(*) 
 	begin
