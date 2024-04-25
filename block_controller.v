@@ -37,14 +37,17 @@ module block_controller(
 		else if (splash_screen == 2'b01 && start_fill) begin
 			spriteRow <= vCount-136;
 			spriteCol <= hCount-274;
+			rgb = spriteColor;
 		end
 		else if (splash_screen == 2'b10 && lose_fill) begin
 			spriteRow <= vCount-136;
 			spriteCol <= hCount-274;
+			rgb = spriteColor;
 		end
 		else if (splash_screen == 2'b11 && win_fill) begin
 			spriteRow <= vCount-136;
 			spriteCol <= hCount-274;
+			rgb = spriteColor;
 		end
 		else if (block_fill)
 			rgb = CURSOR_COLOR;
