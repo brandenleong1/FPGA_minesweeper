@@ -19,36 +19,15 @@ module block_controller(
 	//these two values dictate the center of the block, incrementing and decrementing them leads the block to move in certain directions
 	reg [9:0] xpos, ypos;
 	reg [9:0] xcoord, ycoord;
-	wire [11:0] tile1Color;
-	wire [11:0] tile2Color;
-	wire [11:0] tile3Color;
-	wire [11:0] tile4Color;
-	wire [11:0] tile5Color;
-	wire [11:0] tile6Color;
-	wire [11:0] tile7Color;
-	wire [11:0] tile8Color;
-	wire [11:0] mineColor;
-	wire [11:0] coverColor;
-	wire [11:0] flagColor;
-	wire [11:0] openColor;
+	wire [11:0] spriteColor;
+	reg [9:0] spriteRow;
+	reg [9:0] spriteCol;
 	
 	parameter CURSOR_COLOR   = 12'b1111_0000_0000;
 	initial begin
 		background <= 12'b1111_1111_1111;
 	end
-	
-	tile001_rom tile1(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(tile1Color));
-	tile002_rom tile2(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(tile2Color));
-	tile003_rom tile3(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(tile3Color));
-	tile004_rom tile4(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(tile4Color));
-	tile005_rom tile5(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(tile5Color));
-	tile006_rom tile6(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(tile6Color));
-	tile007_rom tile7(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(tile7Color));
-	tile008_rom tile8(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(tile8Color));
-	open_rom open_(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(openColor));
-	cover_rom cover_(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(coverColor));
-	flag_rom flag(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(flagColor));
-	mine_rom mine(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(mineColor));
+	sprites_rom sprites(.clk(masterclk), .row(spriteRow), .col(spriteCol), .color_data(spriteColor));
 	/*when outputting the rgb value in an always block like this, make sure to include the if(~bright) statement, as this ensures the monitor 
 	will output some data to every pixel and not just the images you are trying to display*/
 	always@ (*) begin
@@ -58,18 +37,56 @@ module block_controller(
 			rgb = CURSOR_COLOR;
 		else if (grid_fill) begin
 			case (cell_apparent)
-				5'b10000: rgb = coverColor;
-				5'b10001: rgb = flagColor;
-				5'b00000: rgb = openColor;
-				5'b00001: rgb = tile1Color;
-				5'b00010: rgb = tile2Color;
-				5'b00011: rgb = tile3Color;
-				5'b00100: rgb = tile4Color;
-				5'b00101: rgb = tile5Color;
-				5'b00110: rgb = tile6Color;
-				5'b00111: rgb = tile7Color;
-				5'b01000: rgb = tile8Color;
+				5'b10000: begin // Cover
+					spriteRow <= vCount-ycoord+30;
+					spriteCol <= hCount-xcoord;
+				end
+				5'b10001: begin // flag
+					spriteRow <= vCount-ycoord+30;
+					spriteCol <= hCount-xcoord+30;
+				end
+				5'b00000: begin // open
+					spriteRow <= vCount-ycoord;
+					spriteCol <= hCount-xcoord;
+				end
+				5'b00001: begin // tile 1
+					spriteRow <= vCount-ycoord;
+					spriteCol <= hCount-xcoord+30;
+				end
+				5'b00010: begin // Tile 2
+					spriteRow <= vCount-ycoord;
+					spriteCol <= hCount-xcoord+60;
+				end
+				5'b00011: begin // Tile 3
+					spriteRow <= vCount-ycoord;
+					spriteCol <= hCount-xcoord+90;
+				end
+				5'b00100: begin // Tile 4
+					spriteRow <= vCount-ycoord;
+					spriteCol <= hCount-xcoord+120;
+				end
+				5'b00101: begin // Tile 5
+					spriteRow <= vCount-ycoord;
+					spriteCol <= hCount-xcoord+150;
+				end
+				5'b00110: begin // Tile 6
+					spriteRow <= vCount-ycoord;
+					spriteCol <= hCount-xcoord+180;
+				end
+				5'b00111: begin // Tile 7
+					spriteRow <= vCount-ycoord;
+					spriteCol <= hCount-xcoord+210;
+				end
+				5'b01000: begin // Tile 8
+					spriteRow <= vCount-ycoord;
+					spriteCol <= hCount-xcoord+240;
+				end
+				5'b11111: begin // Mine
+					spriteRow <= vCount-ycoord+30;
+					spriteCol <= hCount-xcoord+60;
+				end
 			endcase
+			rgb = spriteColor;
 		end
 		else	
 			rgb=background;
