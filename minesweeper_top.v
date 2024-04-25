@@ -85,8 +85,8 @@ module minesweeper_top (
 		assign flag = BtnC_Pulse && Sw1 && ~Sw0 && (state == PLAY);
 		assign open = BtnC_Pulse && ~Sw1 && ~Sw0 && (state == PLAY);
 
-		// assign cell_val_apparent = (|cell_val_cover == 0) ? 5'b10000 : ((cell_val_cover[1] == 1) ? 5'b10001 : cell_val_board);
-		assign cell_val_apparent = ((cell_val_cover[1] == 1) ? 5'b10001 : cell_val_board);
+		assign cell_val_apparent = (|cell_val_cover == 0) ? 5'b10000 : ((cell_val_cover[1] == 1) ? 5'b10001 : cell_val_board);
+		// assign cell_val_apparent = ((cell_val_cover[1] == 1) ? 5'b10001 : cell_val_board);
 
 		assign board_clk = ClkPort;
 
@@ -221,8 +221,8 @@ module minesweeper_top (
 			.y_coord(y_coord),
 			.vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
 		block_controller sc(.masterclk(ClkPort), .bright(bright), .rst(reset),
-			.cell_apparent(cell_val_apparent), .x_pos(x_pos),
-			.y_pos(y_pos), .hCount(hc), .vCount(vc),
+			.cell_apparent(cell_val_apparent), .x_coord(x_coord), .y_coord(y_coord),
+			.x_pos(x_pos), .y_pos(y_pos), .hCount(hc), .vCount(vc),
 			.rgb(rgb), .background(background));
 		
 

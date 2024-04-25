@@ -5,6 +5,8 @@ module block_controller(
 	input bright,
 	input rst,
 	input [4:0] cell_apparent,
+	input [3:0] x_coord,
+	input [3:0] y_coord,
 	input [3:0] x_pos,
 	input [3:0] y_pos,
 	input [9:0] hCount, vCount,
@@ -16,6 +18,7 @@ module block_controller(
 	
 	//these two values dictate the center of the block, incrementing and decrementing them leads the block to move in certain directions
 	reg [9:0] xpos, ypos;
+	reg [9:0] xcoord, ycoord;
 	wire [11:0] tile1Color;
 	wire [11:0] tile2Color;
 	wire [11:0] tile3Color;
@@ -34,18 +37,18 @@ module block_controller(
 		background <= 12'b1111_1111_1111;
 	end
 	
-	tile001_rom tile1(.clk(masterclk), .row(vCount-ypos), .col(hCount-xpos), .color_data(tile1Color));
-	tile002_rom tile2(.clk(masterclk), .row(vCount-ypos), .col(hCount-xpos), .color_data(tile2Color));
-	tile003_rom tile3(.clk(masterclk), .row(vCount-ypos), .col(hCount-xpos), .color_data(tile3Color));
-	tile004_rom tile4(.clk(masterclk), .row(vCount-ypos), .col(hCount-xpos), .color_data(tile4Color));
-	tile005_rom tile5(.clk(masterclk), .row(vCount-ypos), .col(hCount-xpos), .color_data(tile5Color));
-	tile006_rom tile6(.clk(masterclk), .row(vCount-ypos), .col(hCount-xpos), .color_data(tile6Color));
-	tile007_rom tile7(.clk(masterclk), .row(vCount-ypos), .col(hCount-xpos), .color_data(tile7Color));
-	tile008_rom tile8(.clk(masterclk), .row(vCount-ypos), .col(hCount-xpos), .color_data(tile8Color));
-	open_rom open_(.clk(masterclk), .row(vCount-ypos), .col(hCount-xpos), .color_data(openColor));
-	cover_rom cover_(.clk(masterclk), .row(vCount-ypos), .col(hCount-xpos), .color_data(coverColor));
-	flag_rom flag(.clk(masterclk), .row(vCount-ypos), .col(hCount-xpos), .color_data(flagColor));
-	mine_rom mine(.clk(masterclk), .row(vCount-ypos), .col(hCount-xpos), .color_data(mineColor));
+	tile001_rom tile1(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(tile1Color));
+	tile002_rom tile2(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(tile2Color));
+	tile003_rom tile3(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(tile3Color));
+	tile004_rom tile4(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(tile4Color));
+	tile005_rom tile5(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(tile5Color));
+	tile006_rom tile6(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(tile6Color));
+	tile007_rom tile7(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(tile7Color));
+	tile008_rom tile8(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(tile8Color));
+	open_rom open_(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(openColor));
+	cover_rom cover_(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(coverColor));
+	flag_rom flag(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(flagColor));
+	mine_rom mine(.clk(masterclk), .row(vCount-ycoord), .col(hCount-xcoord), .color_data(mineColor));
 	/*when outputting the rgb value in an always block like this, make sure to include the if(~bright) statement, as this ensures the monitor 
 	will output some data to every pixel and not just the images you are trying to display*/
 	always@ (*) begin
@@ -76,12 +79,14 @@ module block_controller(
 	(vCount>=(ypos+26) && vCount <= (ypos+29) && hCount<=(xpos+29) && hCount>=(xpos+1)) ||
 	(vCount>=(ypos) && vCount <= (ypos+29) && hCount<=(xpos+4) && hCount>=(xpos+1)) || 
 	(vCount>=(ypos) && vCount <= (ypos+29) && hCount<=(xpos+29) && hCount>=(xpos+26));
-	assign grid_fill=vCount>=(13) && hCount>=(144) && hCount<=(656);
+	assign grid_fill=vCount>=(36) && hCount>=(224) && hCount<=(704);
 	
 	always@(*) 
 	begin
-		ypos <= y_pos * 32 + 13;
-		xpos <= x_pos * 32 + 144;
+		ypos <= y_pos * 30 + 36;
+		xpos <= x_pos * 30 + 224;
+		ycoord <= y_coord * 30 + 36;
+		xcoord <= x_coord * 30 + 224;
 	end
 	
 endmodule

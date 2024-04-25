@@ -58,34 +58,32 @@ module display_controller(
 		else if (vCount < 10'd524)
 			begin
 			hCount <= 0;
+			x_coord <= 0;
 			vCount <= vCount + 1;
 			end
 		else
 			begin
 			hCount <= 0;
 			vCount <= 0;
+			x_coord <= 0;
+			y_coord <= 0;
 			end
 		
-		if (vCount>=(13) && hCount>=(176) && hCount<=(656) && ((hCount-176)%32 == 0) && (x_coord != 15))
+		if (hCount>(224) && hCount<=(704) && ((hCount-224)%30 == 29) && (x_coord != 15))
 			begin
 				x_coord <= x_coord + 1;
 			end
-		else if (vCount>=(13) && hCount>=(176) && hCount<=(656) && ((hCount-176)%32 == 0) && (x_coord == 15))
+		else if (hCount>(224) && hCount<=(704) && ((hCount-224)%30 == 29) && (x_coord == 15))
 			begin
 				x_coord <= 0;
 			end
-		if (vCount>=(13) && hCount>=(144) && hCount<=(656) && ((vCount-13)%32 == 0) && (y_coord != 15))
+		if ((hCount == 799) && vCount>(36) && ((vCount-36)%30 == 29) && (y_coord != 15))
 			begin
 				y_coord <= y_coord + 1;
 			end
-		else if (vCount>=(13) && hCount>=(144) && hCount<=(656) && ((vCount-13)%32 == 0) && (y_coord == 15))
+		else if ((hCount == 799) && vCount>(36) && ((vCount-36)%30 == 29) && (y_coord == 15))
 			begin
 				y_coord <= 0;
-			end
-		else
-			begin
-			x_coord <= 0;
-			y_coord <= 0;
 			end
 		end
 		
