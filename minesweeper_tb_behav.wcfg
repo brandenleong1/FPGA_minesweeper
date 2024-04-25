@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="minesweeper_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="minesweeper_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="2323941000fs"></ZoomStartTime>
+      <ZoomEndTime time="2324720001fs"></ZoomEndTime>
+      <Cursor1Time time="2324410000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="286"></NameColumnWidth>
+      <ValueColumnWidth column_width="135"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="98" />
+   <wvobject fp_name="/minesweeper_tb/BtnU" type="logic">
+      <obj_property name="ElementShortName">BtnU</obj_property>
+      <obj_property name="ObjectShortName">BtnU</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/BtnD" type="logic">
+      <obj_property name="ElementShortName">BtnD</obj_property>
+      <obj_property name="ObjectShortName">BtnD</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/BtnR" type="logic">
+      <obj_property name="ElementShortName">BtnR</obj_property>
+      <obj_property name="ObjectShortName">BtnR</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/BtnL" type="logic">
+      <obj_property name="ElementShortName">BtnL</obj_property>
+      <obj_property name="ObjectShortName">BtnL</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/BtnC" type="logic">
+      <obj_property name="ElementShortName">BtnC</obj_property>
+      <obj_property name="ObjectShortName">BtnC</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Sw15" type="logic">
+      <obj_property name="ElementShortName">Sw15</obj_property>
+      <obj_property name="ObjectShortName">Sw15</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Sw14" type="logic">
+      <obj_property name="ElementShortName">Sw14</obj_property>
+      <obj_property name="ObjectShortName">Sw14</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Sw13" type="logic">
+      <obj_property name="ElementShortName">Sw13</obj_property>
+      <obj_property name="ObjectShortName">Sw13</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Sw12" type="logic">
+      <obj_property name="ElementShortName">Sw12</obj_property>
+      <obj_property name="ObjectShortName">Sw12</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Sw11" type="logic">
+      <obj_property name="ElementShortName">Sw11</obj_property>
+      <obj_property name="ObjectShortName">Sw11</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Sw10" type="logic">
+      <obj_property name="ElementShortName">Sw10</obj_property>
+      <obj_property name="ObjectShortName">Sw10</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Sw9" type="logic">
+      <obj_property name="ElementShortName">Sw9</obj_property>
+      <obj_property name="ObjectShortName">Sw9</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Sw8" type="logic">
+      <obj_property name="ElementShortName">Sw8</obj_property>
+      <obj_property name="ObjectShortName">Sw8</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Sw7" type="logic">
+      <obj_property name="ElementShortName">Sw7</obj_property>
+      <obj_property name="ObjectShortName">Sw7</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Sw6" type="logic">
+      <obj_property name="ElementShortName">Sw6</obj_property>
+      <obj_property name="ObjectShortName">Sw6</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Sw5" type="logic">
+      <obj_property name="ElementShortName">Sw5</obj_property>
+      <obj_property name="ObjectShortName">Sw5</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Sw4" type="logic">
+      <obj_property name="ElementShortName">Sw4</obj_property>
+      <obj_property name="ObjectShortName">Sw4</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Sw3" type="logic">
+      <obj_property name="ElementShortName">Sw3</obj_property>
+      <obj_property name="ObjectShortName">Sw3</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Sw2" type="logic">
+      <obj_property name="ElementShortName">Sw2</obj_property>
+      <obj_property name="ObjectShortName">Sw2</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Sw1" type="logic">
+      <obj_property name="ElementShortName">Sw1</obj_property>
+      <obj_property name="ObjectShortName">Sw1</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Sw0" type="logic">
+      <obj_property name="ElementShortName">Sw0</obj_property>
+      <obj_property name="ObjectShortName">Sw0</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/hSync" type="logic">
+      <obj_property name="ElementShortName">hSync</obj_property>
+      <obj_property name="ObjectShortName">hSync</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/vSync" type="logic">
+      <obj_property name="ElementShortName">vSync</obj_property>
+      <obj_property name="ObjectShortName">vSync</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/vgaR" type="array">
+      <obj_property name="ElementShortName">vgaR[3:0]</obj_property>
+      <obj_property name="ObjectShortName">vgaR[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/vgaG" type="array">
+      <obj_property name="ElementShortName">vgaG[3:0]</obj_property>
+      <obj_property name="ObjectShortName">vgaG[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/vgaB" type="array">
+      <obj_property name="ElementShortName">vgaB[3:0]</obj_property>
+      <obj_property name="ObjectShortName">vgaB[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/QuadSpiFlashCS" type="logic">
+      <obj_property name="ElementShortName">QuadSpiFlashCS</obj_property>
+      <obj_property name="ObjectShortName">QuadSpiFlashCS</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Ld7" type="logic">
+      <obj_property name="ElementShortName">Ld7</obj_property>
+      <obj_property name="ObjectShortName">Ld7</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Ld6" type="logic">
+      <obj_property name="ElementShortName">Ld6</obj_property>
+      <obj_property name="ObjectShortName">Ld6</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Ld5" type="logic">
+      <obj_property name="ElementShortName">Ld5</obj_property>
+      <obj_property name="ObjectShortName">Ld5</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Ld4" type="logic">
+      <obj_property name="ElementShortName">Ld4</obj_property>
+      <obj_property name="ObjectShortName">Ld4</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Ld3" type="logic">
+      <obj_property name="ElementShortName">Ld3</obj_property>
+      <obj_property name="ObjectShortName">Ld3</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Ld2" type="logic">
+      <obj_property name="ElementShortName">Ld2</obj_property>
+      <obj_property name="ObjectShortName">Ld2</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Ld1" type="logic">
+      <obj_property name="ElementShortName">Ld1</obj_property>
+      <obj_property name="ObjectShortName">Ld1</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Ld0" type="logic">
+      <obj_property name="ElementShortName">Ld0</obj_property>
+      <obj_property name="ObjectShortName">Ld0</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Ca" type="logic">
+      <obj_property name="ElementShortName">Ca</obj_property>
+      <obj_property name="ObjectShortName">Ca</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Cb" type="logic">
+      <obj_property name="ElementShortName">Cb</obj_property>
+      <obj_property name="ObjectShortName">Cb</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Cc" type="logic">
+      <obj_property name="ElementShortName">Cc</obj_property>
+      <obj_property name="ObjectShortName">Cc</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Cd" type="logic">
+      <obj_property name="ElementShortName">Cd</obj_property>
+      <obj_property name="ObjectShortName">Cd</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Ce" type="logic">
+      <obj_property name="ElementShortName">Ce</obj_property>
+      <obj_property name="ObjectShortName">Ce</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Cf" type="logic">
+      <obj_property name="ElementShortName">Cf</obj_property>
+      <obj_property name="ObjectShortName">Cf</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Cg" type="logic">
+      <obj_property name="ElementShortName">Cg</obj_property>
+      <obj_property name="ObjectShortName">Cg</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Dp" type="logic">
+      <obj_property name="ElementShortName">Dp</obj_property>
+      <obj_property name="ObjectShortName">Dp</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/An7" type="logic">
+      <obj_property name="ElementShortName">An7</obj_property>
+      <obj_property name="ObjectShortName">An7</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/An6" type="logic">
+      <obj_property name="ElementShortName">An6</obj_property>
+      <obj_property name="ObjectShortName">An6</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/An5" type="logic">
+      <obj_property name="ElementShortName">An5</obj_property>
+      <obj_property name="ObjectShortName">An5</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/An4" type="logic">
+      <obj_property name="ElementShortName">An4</obj_property>
+      <obj_property name="ObjectShortName">An4</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/An3" type="logic">
+      <obj_property name="ElementShortName">An3</obj_property>
+      <obj_property name="ObjectShortName">An3</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/An2" type="logic">
+      <obj_property name="ElementShortName">An2</obj_property>
+      <obj_property name="ObjectShortName">An2</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/An1" type="logic">
+      <obj_property name="ElementShortName">An1</obj_property>
+      <obj_property name="ObjectShortName">An1</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/An0" type="logic">
+      <obj_property name="ElementShortName">An0</obj_property>
+      <obj_property name="ObjectShortName">An0</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Clk" type="logic">
+      <obj_property name="ElementShortName">Clk</obj_property>
+      <obj_property name="ObjectShortName">Clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/Reset" type="logic">
+      <obj_property name="ElementShortName">Reset</obj_property>
+      <obj_property name="ObjectShortName">Reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/BtnL_Pulse" type="logic">
+      <obj_property name="ElementShortName">BtnL_Pulse</obj_property>
+      <obj_property name="ObjectShortName">BtnL_Pulse</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/BtnU_Pulse" type="logic">
+      <obj_property name="ElementShortName">BtnU_Pulse</obj_property>
+      <obj_property name="ObjectShortName">BtnU_Pulse</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/BtnD_Pulse" type="logic">
+      <obj_property name="ElementShortName">BtnD_Pulse</obj_property>
+      <obj_property name="ObjectShortName">BtnD_Pulse</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/BtnR_Pulse" type="logic">
+      <obj_property name="ElementShortName">BtnR_Pulse</obj_property>
+      <obj_property name="ObjectShortName">BtnR_Pulse</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/BtnC_Pulse" type="logic">
+      <obj_property name="ElementShortName">BtnC_Pulse</obj_property>
+      <obj_property name="ObjectShortName">BtnC_Pulse</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/DIV_CLK" type="array">
+      <obj_property name="ElementShortName">DIV_CLK[26:0]</obj_property>
+      <obj_property name="ObjectShortName">DIV_CLK[26:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/background" type="array">
+      <obj_property name="ElementShortName">background[11:0]</obj_property>
+      <obj_property name="ObjectShortName">background[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/rgb" type="array">
+      <obj_property name="ElementShortName">rgb[11:0]</obj_property>
+      <obj_property name="ObjectShortName">rgb[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/bright" type="logic">
+      <obj_property name="ElementShortName">bright</obj_property>
+      <obj_property name="ObjectShortName">bright</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/vc" type="array">
+      <obj_property name="ElementShortName">vc[9:0]</obj_property>
+      <obj_property name="ObjectShortName">vc[9:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/y_coord" type="array">
+      <obj_property name="ElementShortName">y_coord[3:0]</obj_property>
+      <obj_property name="ObjectShortName">y_coord[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/hc" type="array">
+      <obj_property name="ElementShortName">hc[9:0]</obj_property>
+      <obj_property name="ObjectShortName">hc[9:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/x_coord" type="array">
+      <obj_property name="ElementShortName">x_coord[3:0]</obj_property>
+      <obj_property name="ObjectShortName">x_coord[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/x_pos" type="array">
+      <obj_property name="ElementShortName">x_pos[3:0]</obj_property>
+      <obj_property name="ObjectShortName">x_pos[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/y_pos" type="array">
+      <obj_property name="ElementShortName">y_pos[3:0]</obj_property>
+      <obj_property name="ObjectShortName">y_pos[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/flag" type="logic">
+      <obj_property name="ElementShortName">flag</obj_property>
+      <obj_property name="ObjectShortName">flag</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/open" type="logic">
+      <obj_property name="ElementShortName">open</obj_property>
+      <obj_property name="ObjectShortName">open</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/cell_val_board" type="array">
+      <obj_property name="ElementShortName">cell_val_board[4:0]</obj_property>
+      <obj_property name="ObjectShortName">cell_val_board[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/cell_val_cover" type="array">
+      <obj_property name="ElementShortName">cell_val_cover[1:0]</obj_property>
+      <obj_property name="ObjectShortName">cell_val_cover[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/cell_val_apparent" type="array">
+      <obj_property name="ElementShortName">cell_val_apparent[4:0]</obj_property>
+      <obj_property name="ObjectShortName">cell_val_apparent[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/num_mines" type="array">
+      <obj_property name="ElementShortName">num_mines[8:0]</obj_property>
+      <obj_property name="ObjectShortName">num_mines[8:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/num_non_mines" type="array">
+      <obj_property name="ElementShortName">num_non_mines[8:0]</obj_property>
+      <obj_property name="ObjectShortName">num_non_mines[8:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/cells_to_open" type="array">
+      <obj_property name="ElementShortName">cells_to_open[8:0]</obj_property>
+      <obj_property name="ObjectShortName">cells_to_open[8:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/opened_cell" type="logic">
+      <obj_property name="ElementShortName">opened_cell</obj_property>
+      <obj_property name="ObjectShortName">opened_cell</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/play_pulse" type="logic">
+      <obj_property name="ElementShortName">play_pulse</obj_property>
+      <obj_property name="ObjectShortName">play_pulse</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/state" type="array">
+      <obj_property name="ElementShortName">state[3:0]</obj_property>
+      <obj_property name="ObjectShortName">state[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/is_init" type="array">
+      <obj_property name="ElementShortName">is_init[1:0]</obj_property>
+      <obj_property name="ObjectShortName">is_init[1:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/rand" type="array">
+      <obj_property name="ElementShortName">rand[31:0]</obj_property>
+      <obj_property name="ObjectShortName">rand[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/seed" type="array">
+      <obj_property name="ElementShortName">seed[31:0]</obj_property>
+      <obj_property name="ObjectShortName">seed[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/game_over_wire" type="logic">
+      <obj_property name="ElementShortName">game_over_wire</obj_property>
+      <obj_property name="ObjectShortName">game_over_wire</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/init_x" type="array">
+      <obj_property name="ElementShortName">init_x[3:0]</obj_property>
+      <obj_property name="ObjectShortName">init_x[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/init_y" type="array">
+      <obj_property name="ElementShortName">init_y[3:0]</obj_property>
+      <obj_property name="ObjectShortName">init_y[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/board_clk" type="logic">
+      <obj_property name="ElementShortName">board_clk</obj_property>
+      <obj_property name="ObjectShortName">board_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/sys_clk" type="logic">
+      <obj_property name="ElementShortName">sys_clk</obj_property>
+      <obj_property name="ObjectShortName">sys_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/glob_reset" type="logic">
+      <obj_property name="ElementShortName">glob_reset</obj_property>
+      <obj_property name="ObjectShortName">glob_reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/reset" type="logic">
+      <obj_property name="ElementShortName">reset</obj_property>
+      <obj_property name="ObjectShortName">reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/debounce_N_dc" type="array">
+      <obj_property name="ElementShortName">debounce_N_dc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">debounce_N_dc[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/x_size" type="array">
+      <obj_property name="ElementShortName">x_size[31:0]</obj_property>
+      <obj_property name="ObjectShortName">x_size[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/y_size" type="array">
+      <obj_property name="ElementShortName">y_size[31:0]</obj_property>
+      <obj_property name="ObjectShortName">y_size[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/x_coord_bits" type="array">
+      <obj_property name="ElementShortName">x_coord_bits[31:0]</obj_property>
+      <obj_property name="ObjectShortName">x_coord_bits[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/y_coord_bits" type="array">
+      <obj_property name="ElementShortName">y_coord_bits[31:0]</obj_property>
+      <obj_property name="ObjectShortName">y_coord_bits[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/INIT" type="array">
+      <obj_property name="ElementShortName">INIT[3:0]</obj_property>
+      <obj_property name="ObjectShortName">INIT[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/PLAY" type="array">
+      <obj_property name="ElementShortName">PLAY[3:0]</obj_property>
+      <obj_property name="ObjectShortName">PLAY[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/WIN" type="array">
+      <obj_property name="ElementShortName">WIN[3:0]</obj_property>
+      <obj_property name="ObjectShortName">WIN[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/minesweeper_tb/LOSE" type="array">
+      <obj_property name="ElementShortName">LOSE[3:0]</obj_property>
+      <obj_property name="ObjectShortName">LOSE[3:0]</obj_property>
+   </wvobject>
+</wave_config>
