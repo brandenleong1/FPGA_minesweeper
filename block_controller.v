@@ -37,18 +37,18 @@ module block_controller(
     	if(~bright )	//force black if not inside the display area
 			rgb = 12'b0000_0000_0000;
 		else if (splash_screen == 2'b01 && start_fill) begin
-			spriteRow <= vCount-76;
+			spriteRow <= vCount-74;
 			spriteCol <= hCount-344;
 			rgb = spriteColor;
 		end
 		else if (splash_screen == 2'b10 && lose_fill) begin
-			spriteRow <= vCount-34;
-			spriteCol <= hCount-324;
+			spriteRow <= vCount-16;
+			spriteCol <= hCount-341;
 			rgb = spriteColor;
 		end
 		else if (splash_screen == 2'b11 && win_fill) begin
-			spriteRow <= vCount+30;
-			spriteCol <= hCount-374;
+			spriteRow <= vCount+41;
+			spriteCol <= hCount-344;
 			rgb = spriteColor;
 		end
 		else if (block_fill)
@@ -118,8 +118,8 @@ module block_controller(
 	(vCount>=(ypos) && vCount <= (ypos+29) && hCount<=(xpos+4) && hCount>=(xpos+1)) || 
 	(vCount>=(ypos) && vCount <= (ypos+29) && hCount<=(xpos+29) && hCount>=(xpos+26));
 	assign grid_fill=vCount>=(36) && hCount>=(224) && hCount<=(704);
-	assign win_fill=vCount>=(136) && vCount <176 && hCount>=(339) && hCount<=(589);
-	assign lose_fill=vCount>=(136) && vCount <176 && hCount>=(339) && hCount<=(549);
+	assign win_fill=vCount>=(136) && vCount <176 && hCount>=(384) && hCount<=(544);
+	assign lose_fill=vCount>=(136) && vCount <176 && hCount>=(359) && hCount<=(569);
 	assign start_fill=vCount>=(136) && vCount <176 && hCount>=(344) && hCount<=(584);
 	
 	always@(*) 
