@@ -8,7 +8,9 @@ module minesweeper_top (
 		Ld7, Ld6, Ld5, Ld4, Ld3, Ld2, Ld1, Ld0,			// right 8 LEDs
 		An7, An6, An5, An4, An3, An2, An1, An0,			// 8 anodes
 		Ca, Cb, Cc, Cd, Ce, Cf, Cg,						// 7 cathodes
-		Dp												// Dot Point Cathode on SSDs
+		Dp,												// Dot Point Cathode on SSDs
+		vgaR, vgaG, vgaB,
+		hSync, vSync
 	);
 
 	/* == INPUTS == */
@@ -18,6 +20,8 @@ module minesweeper_top (
 		input		Sw7, Sw6, Sw5, Sw4, Sw3, Sw2, Sw1, Sw0;
 
 	/* == OUTPUTS == */
+		output		hSync, vSync;
+		output		[3:0] vgaR, vgaG, vgaB;
 		output		QuadSpiFlashCS;
 		output		Ld7, Ld6, Ld5, Ld4, Ld3, Ld2, Ld1, Ld0;
 		output		Ca, Cb, Cc, Cd, Ce, Cf, Cg, Dp;
@@ -38,6 +42,14 @@ module minesweeper_top (
 			LOSE =	4'b1000;
 
 	/* == LOCAL SIGNALS == */
+<<<<<<< HEAD
+=======
+		wire bright;
+		wire[9:0] hc, vc;
+		wire [11:0] rgb;
+		wire [11:0] background;
+	
+>>>>>>> map
 		wire		glob_reset, reset, ClkPort;
 		wire		board_clk, sys_clk;
 		wire [2:0]	ssdscan_clk;
@@ -48,8 +60,15 @@ module minesweeper_top (
 		wire [3:0]	SSD7, SSD6, SSD5, SSD4, SSD3, SSD2, SSD1, SSD0;
 		reg [7:0]	SSD_CATHODES;
 
+<<<<<<< HEAD
 		reg [(x_coord_bits - 1):0] x_coord;
 		reg [(y_coord_bits - 1):0] y_coord;
+=======
+		wire [(x_coord_bits - 1):0] x_coord;
+		wire [(y_coord_bits - 1):0] y_coord;
+		reg [(x_coord_bits - 1):0] x_pos;
+		reg [(y_coord_bits - 1):0] y_pos;
+>>>>>>> map
 		wire [4:0] cell_val_board;
 		wire [1:0] cell_val_cover;
 		wire [4:0] cell_val_apparent;
@@ -60,6 +79,11 @@ module minesweeper_top (
 		wire flag, open;
 		wire opened_cell;
 		wire play_pulse;
+<<<<<<< HEAD
+=======
+		
+		reg [1:0]splash_screen;
+>>>>>>> map
 
 		wire [1:0] is_init;
 		wire [31:0] rand, seed;
@@ -75,10 +99,17 @@ module minesweeper_top (
 		assign open = BtnC_Pulse && ~Sw1 && ~Sw0 && (state == PLAY);
 
 		assign cell_val_apparent = (|cell_val_cover == 0) ? 5'b10000 : ((cell_val_cover[1] == 1) ? 5'b10001 : cell_val_board);
+<<<<<<< HEAD
 
 	/* == CLOCK DIVISION == */
 		BUFGP BUFGP1(board_clk, ClkPort);
 
+=======
+		// assign cell_val_apparent = ((cell_val_cover[1] == 1) ? 5'b10001 : cell_val_board);
+
+		assign board_clk = ClkPort;
+
+>>>>>>> map
 		always @ (posedge board_clk, posedge glob_reset) begin
 			if (glob_reset)
 				DIV_CLK <= 0;
@@ -88,6 +119,13 @@ module minesweeper_top (
 
 		// assign sys_clk = board_clk;
 		assign sys_clk = DIV_CLK[0];
+<<<<<<< HEAD
+=======
+		
+		assign vgaR = rgb[11 : 8];
+		assign vgaG = rgb[7  : 4];
+		assign vgaB = rgb[3  : 0];
+>>>>>>> map
 
 	/* == DEBOUNCING == */
 		debouncer #(.N_dc(debounce_N_dc)) debouncer_L(
@@ -115,21 +153,40 @@ module minesweeper_top (
 			.SCEN(BtnC_Pulse), .MCEN( ), .CCEN( )
 		);
 
+		
+		reg [4:0] test_apparent_val;
+		
 	/* == INITIALIZATION == */
 		initial begin
+<<<<<<< HEAD
 			x_coord = 0;
 			y_coord = 0;
+=======
+			splash_screen = 2'b01; // Start screen
+			x_pos = 0;
+			y_pos = 0;
+>>>>>>> map
 			state = INIT;
 			// game_over = 0;
 		end
 
 		always @ (posedge sys_clk, posedge reset) begin
+<<<<<<< HEAD
+=======
+			if ((y_pos == y_coord) && (x_pos == x_coord)) begin
+				test_apparent_val <= cell_val_apparent;
+			end
+>>>>>>> map
 			if (reset) begin
 				state <= INIT;
 			end else begin
 				case (state)
 					INIT: begin
+<<<<<<< HEAD
 						if (|is_init == 0) begin
+=======
+						if (|is_init == 0)begin
+>>>>>>> map
 							state <= PLAY;
 							cells_to_open <= num_non_mines;
 						end
@@ -138,6 +195,7 @@ module minesweeper_top (
 					PLAY: begin
 						if ((opened_cell == 1'b1) && (cell_val_apparent != 5'b11111)) begin
 							cells_to_open <= cells_to_open - 1;
+<<<<<<< HEAD
 						end
 
 						if ((BtnL_Pulse == 1'b1) && (x_coord != 0)) begin
@@ -154,12 +212,42 @@ module minesweeper_top (
 
 						if ((BtnR_Pulse == 1'b1) && ((x_coord + 1) < x_size)) begin
 							x_coord <= x_coord + 1;
+=======
+							splash_screen <= 2'b00;
+						end
+
+						if ((BtnL_Pulse == 1'b1) && (x_pos != 0)) begin
+							x_pos <= x_pos - 1;
+							splash_screen <= 2'b00;
+						end
+
+						if ((BtnU_Pulse == 1'b1) && (y_pos != 0)) begin
+							y_pos <= y_pos - 1;
+							splash_screen <= 2'b00;
+						end
+
+						if ((BtnD_Pulse == 1'b1) && ((y_pos + 1) < y_size)) begin
+							y_pos <= y_pos + 1;
+							splash_screen <= 2'b00;
+						end
+
+						if ((BtnR_Pulse == 1'b1) && ((x_pos + 1) < x_size)) begin
+							x_pos <= x_pos + 1;
+							splash_screen <= 2'b00;
+>>>>>>> map
 						end
 
 						if (cell_val_apparent == 5'b11111) begin
 							state <= LOSE;
+<<<<<<< HEAD
 						end else if (cells_to_open == 0) begin
 							state <= WIN;
+=======
+							splash_screen <= 2'b10; // Gameover screen
+						end else if (cells_to_open == 0) begin
+							state <= WIN;
+							splash_screen <= 2'b11; // You Win screen
+>>>>>>> map
 						end
 					end
 
@@ -192,22 +280,45 @@ module minesweeper_top (
 			.clk(sys_clk), .reset(reset),
 			.flag(flag), .open(open),
 			.x_coord(x_coord), .y_coord(y_coord),
+<<<<<<< HEAD
+=======
+			.x_pos(x_pos), .y_pos(y_pos),
+>>>>>>> map
 			.cell_val(cell_val_cover), .opened_cell(opened_cell)
 		);
+		
+		display_controller dc(.clk(ClkPort), .hSync(hSync), .x_coord(x_coord),
+			.y_coord(y_coord),
+			.vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
+		block_controller sc(.masterclk(ClkPort), .bright(bright), .rst(reset),
+			.cell_apparent(cell_val_apparent), .x_coord(x_coord), .y_coord(y_coord),
+			.x_pos(x_pos), .y_pos(y_pos), .hCount(hc), .vCount(vc), .splash_screen(splash_screen),
+			.rgb(rgb), .background(background));
+		
 
 	/* == OUTPUT: LEDs == */
 		assign {Ld7, Ld6, Ld5, Ld4}		=	{0, 0, 0, BtnC};
 		assign {Ld3, Ld2, Ld1, Ld0}		=	{BtnL, BtnU, BtnR, BtnD};
 
 	/* == OUTPUT: SSDs == */
+<<<<<<< HEAD
 		assign SSD7 = Sw14 ?	num_non_mines[7:4]	:	y_coord[3:0];
 		assign SSD6 = Sw14 ?	num_non_mines[3:0]	:	x_coord[3:0];
+=======
+		assign SSD7 = Sw14 ?	num_non_mines[7:4]	:	y_pos[3:0];
+		assign SSD6 = Sw14 ?	num_non_mines[3:0]	:	x_pos[3:0];
+>>>>>>> map
 		assign SSD5 = Sw14 ?	num_mines[7:4]		:	cells_to_open[7:4];
 		assign SSD4 = Sw14 ?	num_mines[3:0]		:	cells_to_open[3:0];
 		assign SSD3 = Sw14 ?	rand[7:4]			:	4'b0000;
 		assign SSD2 = Sw14 ?	rand[3:0]			:	state[3:0];
+<<<<<<< HEAD
 		assign SSD1 = Sw14 ?	seed[7:4]			:	{3'b000, cell_val_apparent[4]};
 		assign SSD0 = Sw14 ?	seed[3:0]			:	cell_val_apparent[3:0];
+=======
+		assign SSD1 = Sw14 ?	seed[7:4]			:	{3'b000, test_apparent_val[4]};
+		assign SSD0 = Sw14 ?	seed[3:0]			:	test_apparent_val[3:0];
+>>>>>>> map
 
 		assign ssdscan_clk = DIV_CLK[19:17];
 		assign An0 = !(~(ssdscan_clk[2]) && ~(ssdscan_clk[1]) && ~(ssdscan_clk[0]));

@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2020.2 (64-bit)
+# SW Build 3064766 on Wed Nov 18 09:12:45 MST 2020
+# IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+# Start of session at: Tue Apr 23 20:17:12 2024
+# Process ID: 1956
+# Current directory: C:/Users/kojiroy/Questasim_projects/FPGA_minesweeper/vga_moving_block/vga_moving_block.runs/impl_1
+# Command line: vivado.exe -log vga_top.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source vga_top.tcl -notrace
+# Log file: C:/Users/kojiroy/Questasim_projects/FPGA_minesweeper/vga_moving_block/vga_moving_block.runs/impl_1/vga_top.vdi
+# Journal file: C:/Users/kojiroy/Questasim_projects/FPGA_minesweeper/vga_moving_block/vga_moving_block.runs/impl_1\vivado.jou
+#-----------------------------------------------------------
+source vga_top.tcl -notrace
